@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTL Sales Mastery — The Field Manual</title>
+<style>
+:root{
+  --ink:#0B1B2E;        /* deep navy canvas ink */
+  --ink-2:#12283f;      /* raised navy */
+  --paper:#F5F2EC;      /* off-white paper */
+  --paper-2:#ECE7DC;    /* aged panel */
+  --line:#d9d2c4;       /* hairline */
+  --red:#C8442E;        /* closer red / the NO / watch-out */
+  --green:#1F7A54;      /* money green / wins / proof */
+  --brass:#A9791C;      /* coach verbatim */
+  --brass-bg:#F6EEDC;
+  --blue:#1D6FB8;       /* framework / links */
+  --muted:#5c6672;
+  --card:#ffffff;
+  --shadow:0 1px 0 rgba(11,27,46,.04), 0 8px 24px -18px rgba(11,27,46,.5);
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ---------- LAYOUT ---------- */
+.wrap{display:flex;min-height:100vh}
+.rail{
+  width:290px;flex:0 0 290px;background:var(--ink);color:#cdd6e0;
+  position:sticky;top:0;height:100vh;overflow-y:auto;padding:0;
+  border-right:1px solid #000;
+}
+.main{flex:1 1 auto;min-width:0;max-width:900px;margin:0 auto;padding:0 40px 120px}
+@media(max-width:860px){
+  .rail{position:fixed;left:-300px;transition:left .25s ease;z-index:60;box-shadow:0 0 40px rgba(0,0,0,.4)}
+  .rail.open{left:0}
+  .main{padding:0 20px 100px}
+  .menu-btn{display:flex !important}
+}
+
+/* ---------- RAIL ---------- */
+.rail-head{padding:26px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.rail-logo{font-weight:900;letter-spacing:-.02em;font-size:20px;color:#fff;line-height:1.05}
+.rail-logo .mk{color:var(--red)}
+.rail-sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7f8ea0;margin-top:8px}
+.rail nav{padding:12px 0 40px}
+.rail .grp{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#5f7186;padding:16px 22px 6px}
+.rail a.navlink{display:block;padding:7px 22px 7px 22px;color:#b9c4d1;font-size:13.5px;border-left:3px solid transparent}
+.rail a.navlink .n{font-family:var(--mono);font-size:11px;color:#5f7186;margin-right:8px}
+.rail a.navlink:hover{background:rgba(255,255,255,.04);color:#fff;text-decoration:none}
+.rail a.navlink.active{border-left-color:var(--red);background:rgba(200,68,46,.10);color:#fff}
+.rail-foot{padding:14px 22px 30px;font-size:11px;color:#5f7186;font-family:var(--mono);line-height:1.5}
+
+/* ---------- TOP BAR ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;background:rgba(245,242,236,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  padding:14px 0;margin-bottom:8px;
+}
+.topbar-inner{display:flex;gap:12px;align-items:center}
+.menu-btn{display:none;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-size:18px;cursor:pointer}
+.search{flex:1 1 auto;position:relative}
+.search input{
+  width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--line);
+  border-radius:10px;background:#fff;font-family:var(--sans);font-size:14.5px;color:var(--ink);
+}
+.search input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,111,184,.12)}
+.search .mag{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
+.search .count{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;padding:12px 0 4px}
+.chip{
+  font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;
+  padding:5px 11px;border:1.5px solid var(--line);border-radius:999px;background:#fff;
+  color:var(--muted);cursor:pointer;user-select:none;transition:all .12s;
+}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.on.buyer{background:var(--blue);border-color:var(--blue)}
+.chip.on.stage{background:var(--green);border-color:var(--green)}
+.chip-clear{font-family:var(--mono);font-size:11px;color:var(--red);cursor:pointer;padding:5px 4px;text-transform:uppercase;letter-spacing:.03em}
+
+/* ---------- HERO ---------- */
+.hero{padding:56px 0 30px;border-bottom:3px solid var(--ink)}
+.hero .kick{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:18px}
+.hero h1{font-size:clamp(40px,7vw,74px);line-height:.94;font-weight:900;letter-spacing:-.035em;margin:0 0 20px}
+.hero h1 em{font-style:normal;color:var(--red)}
+.hero .lede{font-size:19px;line-height:1.5;max-width:640px;color:var(--ink-2)}
+.hero .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;padding-top:24px;border-top:1px solid var(--line)}
+.hero .meta .stat{}
+.hero .meta .num{font-size:30px;font-weight:900;letter-spacing:-.02em;line-height:1}
+.hero .meta .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+
+/* ---------- PART HEADERS ---------- */
+.part{padding-top:60px;scroll-margin-top:88px}
+.part-head{margin-bottom:8px}
+.part-num{font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--red);font-weight:700}
+.part-head h2{font-size:clamp(30px,5vw,44px);font-weight:900;letter-spacing:-.03em;line-height:1.02;margin:8px 0 12px}
+.part-intro{font-size:17px;color:var(--ink-2);max-width:640px;margin-bottom:10px}
+.part-rule{height:3px;background:var(--ink);margin:20px 0 6px;border:none}
+
+/* ---------- PLAY CARD ---------- */
+.card{
+  background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ink);
+  border-radius:12px;padding:26px 28px 24px;margin:26px 0;box-shadow:var(--shadow);
+  scroll-margin-top:100px;
+}
+.card.t-mindset{border-left-color:var(--ink)}
+.card.t-play{border-left-color:var(--blue)}
+.card.t-framework{border-left-color:var(--brass)}
+.card.t-drill{border-left-color:var(--green)}
+.card .eyebrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:var(--paper-2);color:var(--muted)}
+.tag.stage{background:#e4f0ea;color:var(--green)}
+.tag.buyer{background:#e5eff8;color:var(--blue)}
+.card h3{font-size:23px;font-weight:900;letter-spacing:-.02em;line-height:1.12;margin:2px 0 4px}
+.card .sit{font-size:15px;color:var(--muted);font-style:italic;margin:0 0 16px}
+.card p{margin:0 0 14px}
+.card .lead-in{font-weight:700;color:var(--ink)}
+.card ul,.card ol{margin:0 0 14px;padding-left:22px}
+.card li{margin:0 0 8px}
+.card .sub{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin:22px 0 10px;font-weight:700}
+
+/* quote (coach verbatim) */
+.quote{
+  background:var(--brass-bg);border:1px solid #e7d8b0;border-left:4px solid var(--brass);
+  border-radius:0 8px 8px 0;padding:16px 20px;margin:16px 0;
+}
+.quote p{font-size:16.5px;line-height:1.5;margin:0 0 8px;color:#4a3c14;font-weight:500}
+.quote p:last-child{margin-bottom:0}
+.quote .by{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);font-weight:700}
+.quote .by::before{content:"— "}
+
+/* real demo example */
+.demo{
+  background:var(--paper-2);border-radius:8px;padding:16px 20px;margin:16px 0;
+  border:1px dashed #c3b9a4;
+}
+.demo .dh{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:700}
+.demo .line{margin:0 0 7px;font-size:15px}
+.demo .who{font-weight:800;color:var(--ink)}
+.demo .who.p{color:var(--muted)}
+
+/* script line */
+.say{background:var(--ink);color:#eaf1f7;border-radius:8px;padding:14px 18px;margin:14px 0;font-size:16px;line-height:1.45}
+.say .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6fa8d8;display:block;margin-bottom:6px}
+.say em{color:#fff;font-style:normal;font-weight:600}
+
+/* takeaways / watchout */
+.takeaway{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:18px 0 4px;background:#fbfaf7}
+.takeaway .th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px}
+.takeaway ul{margin:0;padding-left:20px}
+.takeaway li{margin:0 0 6px;font-size:14.5px}
+.watch{border-color:#e6c3bb;background:#fcf3f1}
+.watch .th{color:var(--red)}
+
+/* inline callout / rule */
+.rulebox{border-left:4px solid var(--red);background:#fff;padding:4px 0 4px 18px;margin:16px 0;font-weight:600;font-size:17px}
+
+/* framework mini-grid */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:16px 0}
+.fcell{border:1px solid var(--line);border-radius:8px;padding:13px 15px;background:#fff}
+.fcell .ft{font-weight:800;font-size:14px;margin-bottom:4px}
+.fcell .fd{font-size:13px;color:var(--muted);line-height:1.45}
+
+.noresults{display:none;text-align:center;padding:60px 20px;color:var(--muted);font-family:var(--mono);font-size:13px}
+.backtop{position:fixed;right:22px;bottom:22px;width:44px;height:44px;border-radius:50%;background:var(--ink);color:#fff;border:none;font-size:18px;cursor:pointer;opacity:0;transition:opacity .2s;z-index:30}
+.backtop.show{opacity:1}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--red);width:0;z-index:80;transition:width .1s}
+
+
+/* ===================== KNOWLEDGE CHECK (Part 11) ===================== */
+#part11{scroll-margin-top:88px}
+.qz-intro-card{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--brass);border-radius:12px;padding:26px 28px;margin:26px 0;box-shadow:var(--shadow)}
+.qz-intro-card h3{font-size:23px;font-weight:900;letter-spacing:-.02em;margin:0 0 8px}
+.qz-intro-card p{margin:0 0 14px;color:var(--ink-2)}
+.qz-field{margin:0 0 16px}
+.qz-field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
+.qz-field input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;font-family:var(--sans);font-size:15.5px;color:var(--ink)}
+.qz-field input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,111,184,.12)}
+.qz-field .qz-err{color:var(--red);font-size:12.5px;margin-top:6px;display:none;font-weight:600}
+.qz-field.invalid input{border-color:var(--red)}
+.qz-field.invalid .qz-err{display:block}
+.qz-privacy{font-size:12.5px;color:var(--muted);margin:16px 0 22px;padding:12px 14px;background:var(--paper-2);border-radius:8px;line-height:1.5}
+.qz-btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:none;border-radius:10px;padding:14px 26px;font-family:var(--sans);font-size:15.5px;font-weight:700;cursor:pointer;transition:transform .08s,background .15s}
+.qz-btn:hover{background:var(--ink-2)}
+.qz-btn:active{transform:translateY(1px)}
+.qz-btn.red{background:var(--red)}
+.qz-btn.red:hover{background:#a9371f}
+.qz-btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.qz-btn.ghost:hover{background:var(--paper-2)}
+.qz-hidden{display:none !important}
+.qz-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--ink);color:#eaf1f7;border-radius:10px;padding:12px 18px;margin:6px 0 18px;position:sticky;top:76px;z-index:20}
+.qz-bar .who{font-size:13px}.qz-bar .who b{color:#fff}
+.qz-bar .prog{font-family:var(--mono);font-size:12px;color:#9fb4c9}
+.qz-chaphead{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);font-weight:700;padding:24px 0 2px;border-top:1px solid var(--line);margin-top:24px}
+.qz-chapblock:first-of-type .qz-chaphead{border-top:none;margin-top:6px}
+.qz-q{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ink);border-radius:12px;padding:20px 22px;margin:14px 0;box-shadow:var(--shadow)}
+.qz-q .qtype{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);padding:3px 8px;border-radius:5px;display:inline-block;margin-bottom:10px}
+.qz-q .qtext{font-size:16.5px;font-weight:700;letter-spacing:-.01em;margin:0 0 14px;line-height:1.35}
+.qz-q .qtext .n{color:var(--muted);font-weight:900;margin-right:8px}
+.qz-opts{display:flex;flex-direction:column;gap:9px}
+.qz-opt{display:flex;align-items:flex-start;gap:11px;padding:11px 15px;border:1.5px solid var(--line);border-radius:9px;background:#fff;cursor:pointer;transition:border-color .12s,background .12s;font-size:15px}
+.qz-opt:hover{border-color:var(--ink)}
+.qz-opt input{margin:2px 0 0;accent-color:var(--ink);flex:0 0 auto;width:16px;height:16px}
+.qz-opt.sel{border-color:var(--ink);background:#f4f7fb}
+.qz-fill input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;font-family:var(--sans);font-size:15.5px}
+.qz-fill input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,111,184,.12)}
+.qz-fill .hint{font-size:12px;color:var(--muted);margin-top:7px;font-style:italic}
+.qz-submitrow{display:flex;flex-direction:column;gap:12px;align-items:center;margin:32px 0 0;text-align:center}
+.qz-scorecard{background:var(--ink);color:#fff;border-radius:16px;padding:36px 30px;margin:12px 0 26px;text-align:center}
+.qz-scorecard .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7f9ab5;margin-bottom:12px}
+.qz-scorecard .big{font-size:68px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.qz-scorecard .big span{font-size:32px;color:#7f9ab5}
+.qz-scorecard .grade{display:inline-block;margin-top:16px;font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:7px 16px;border-radius:999px;color:#fff}
+.qz-scorecard .who2{margin-top:18px;font-size:14px;color:#cdd6e0}
+.qz-scorecard .who2 b{color:#fff}
+.qz-breakdown h3{font-size:20px;font-weight:900;letter-spacing:-.02em;margin:26px 0 4px}
+.qz-breakdown .bsub{color:var(--muted);font-size:14px;margin:0 0 16px}
+.qz-brow{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--line)}
+.qz-brow .bname{flex:1 1 auto;font-size:14.5px;font-weight:600}
+.qz-btrack{flex:0 0 120px;height:8px;background:var(--paper-2);border-radius:99px;overflow:hidden}
+.qz-bfill{height:100%;background:var(--green);border-radius:99px}
+.qz-bfill.low{background:var(--red)}.qz-bfill.mid{background:var(--brass)}
+.qz-bscore{flex:0 0 52px;text-align:right;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.qz-review h3{font-size:20px;font-weight:900;letter-spacing:-.02em;margin:28px 0 4px}
+.qz-rq{border:1px solid var(--line);border-left:5px solid var(--green);border-radius:10px;padding:16px 18px;margin:14px 0;background:#fff}
+.qz-rq.wrong{border-left-color:var(--red)}
+.qz-rq .rstat{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.qz-rq.right .rstat{color:var(--green)}.qz-rq.wrong .rstat{color:var(--red)}
+.qz-rq .rqt{font-weight:700;margin:0 0 10px;font-size:15.5px}
+.qz-rq .rline{font-size:14px;margin:4px 0}
+.qz-rq .rline .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.qz-rq .yours{color:var(--red)}.qz-rq.right .yours{color:var(--green)}
+.qz-rq .correct{color:var(--green);font-weight:600}
+.qz-rq .why{margin-top:10px;padding:11px 14px;background:var(--brass-bg);border-left:3px solid var(--brass);border-radius:0 7px 7px 0;font-size:13.5px;color:#4a3c14}
+@media(max-width:560px){.qz-btrack{flex-basis:80px}.qz-scorecard .big{font-size:56px}.qz-bar{top:70px}}
+@media print{.qz-bar{position:static}}
+
+@media print{
+  .rail,.topbar,.backtop,.progress{display:none}
+  .main{max-width:100%;padding:0}
+  .card{break-inside:avoid;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="wrap">
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="rail" id="rail">
+  <div class="rail-head">
+    <div class="rail-logo">ISTL SALES<br><span class="mk">MASTERY</span></div>
+    <div class="rail-sub">The Field Manual · Complete</div>
+  </div>
+  <nav id="nav">
+    <div class="grp">The System</div>
+    <a class="navlink" href="#part0"><span class="n">00</span>The Operating System</a>
+    <div class="grp">The Call, In Order</div>
+    <a class="navlink" href="#part1"><span class="n">01</span>Before the Call</a>
+    <a class="navlink" href="#part2"><span class="n">02</span>The Opening</a>
+    <a class="navlink" href="#part3"><span class="n">03</span>Discovery</a>
+    <div class="grp">The Pitch &amp; Close</div>
+    <a class="navlink" href="#part4"><span class="n">04</span>The Pitch</a>
+    <a class="navlink" href="#part5"><span class="n">05</span>Trial Closing</a>
+    <a class="navlink" href="#part6"><span class="n">06</span>The Close</a>
+    <div class="grp">Objections &amp; Beyond</div>
+    <a class="navlink" href="#part7"><span class="n">07</span>Objection Library</a>
+    <a class="navlink" href="#part8"><span class="n">08</span>Follow-Up &amp; No-Shows</a>
+    <a class="navlink" href="#part9"><span class="n">09</span>Retention &amp; Winback</a>
+    <a class="navlink" href="#part10"><span class="n">10</span>Framework Vault</a>
+    <div class="grp">Reference</div>
+    <a class="navlink" href="#appendix"><span class="n">A</span>The Vault</a>
+    <a class="navlink" href="#part11"><span class="n">✓</span>Knowledge Check</a>
+  </nav>
+  <div class="rail-foot">
+    Built from 53 coaching sessions.<br>Mar–Jul 2026.<br>Yuri Saiko · Gene Blinkov · TJ Serafini.
+  </div>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+      <div class="search">
+        <span class="mag">⌕</span>
+        <input type="text" id="search" placeholder="Search plays, objections, situations…" autocomplete="off">
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+    <div class="chips" id="chips">
+      <span class="chip stage" data-filter="stage:prep">Pre-Call</span>
+      <span class="chip stage" data-filter="stage:open">Opening</span>
+      <span class="chip stage" data-filter="stage:discovery">Discovery</span>
+      <span class="chip stage" data-filter="stage:pitch">Pitch</span>
+      <span class="chip stage" data-filter="stage:close">Close</span>
+      <span class="chip stage" data-filter="stage:objection">Objection</span>
+      <span class="chip stage" data-filter="stage:followup">Follow-Up</span>
+      <span class="chip buyer" data-filter="buyer:newbie">Newbie</span>
+      <span class="chip buyer" data-filter="buyer:veteran">Veteran</span>
+      <span class="chip buyer" data-filter="buyer:buyer">Buyer</span>
+      <span class="chip buyer" data-filter="buyer:agent">Agent</span>
+      <span class="chip buyer" data-filter="buyer:broke">Low-Budget</span>
+      <span class="chip" data-filter="type:mindset">Mindset</span>
+      <span class="chip" data-filter="type:framework">Framework</span>
+      <span class="chip-clear" id="clearFilters">✕ clear</span>
+    </div>
+  </div>
+
+  <!-- ================= HERO ================= -->
+  <header class="hero">
+    <div class="kick">Internal · Whole Team · Not for Distribution</div>
+    <h1>Presentation is<br>not selling.<br><em>This is.</em></h1>
+    <p class="lede">Every play in this manual came off a real ISTL demo — what worked, what lost the deal, and the exact words Yuri and Gene used to fix it. Read it like a field manual: find your situation, run the play, work the no.</p>
+    <div class="meta">
+      <div class="stat"><div class="num">53</div><div class="lbl">Coaching sessions</div></div>
+      <div class="stat"><div class="num">12,716</div><div class="lbl">Contracts signed, 2025</div></div>
+      <div class="stat"><div class="num">Mar–Jul</div><div class="lbl">2026 timeline</div></div>
+      <div class="stat"><div class="num">11</div><div class="lbl">Parts + appendix</div></div>
+    </div>
+  </header>
+
+<!-- ============================================================ PART 0 -->
+<section class="part" id="part0">
+  <div class="part-head">
+    <div class="part-num">PART 00</div>
+    <h2>The Operating System</h2>
+    <p class="part-intro">Before a single tactic matters, the wiring underneath has to be right. These are the beliefs Yuri and Gene return to in almost every session — the difference between a rep who executes and one who improvises their way to a zero.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 0.1 -->
+  <article class="card t-mindset" data-tags="type:mindset execution script talent conviction" data-title="Execution beats talent">
+    <div class="eyebrow"><span class="tag">Mindset</span><span class="tag">Foundation</span></div>
+    <h3>Execution Beats Talent — Sell the Same Way on Your Worst Day</h3>
+    <p class="sit">The rep who freestyles is their own biggest competitor.</p>
+    <p><span class="lead-in">The whole point of a script is to remove emotion from selling.</span> Mood, energy, stress, being sick — none of it should move your numbers. Top performers sell the same way every single time. If your execution changes with your mood, your results will always be unstable, and you'll blame the leads instead of the process.</p>
+    <div class="quote">
+      <p>"A script is not to sound robotic. A script is to remove emotions from selling. If a new hire cannot read your script and perform at 70–80% effectiveness, the script is not good enough."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>Creativity comes <em>after</em> mastery, not before. Actors don't sound scripted because they've run the lines a hundred times — same rule here. And when a deal dies, the honest question is never "were the leads bad?" It's "did I execute correctly on the leads that were good?"</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Repeatable &gt; creative. Lock the motion, then add flair.</li>
+        <li>Complaining about leads is usually proof the script wasn't followed.</li>
+        <li>You won't close every lead (1 in 10–15 is normal). Judge yourself on execution against the <em>good</em> ones.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 0.2 -->
+  <article class="card t-mindset" data-tags="type:mindset certainty pain conviction newbie buyer:newbie belief" data-title="Certainty not pain">
+    <div class="eyebrow"><span class="tag">Mindset</span><span class="tag buyer">Newbie</span></div>
+    <h3>Sell Certainty, Not Pain — Conviction Transfers</h3>
+    <p class="sit">The newbie's real objection is never the price. It's "what if I fail again?"</p>
+    <p><span class="lead-in">People don't buy logic. They buy certainty.</span> With inexperienced buyers especially, stop digging endlessly into pain — their true blocker is that they don't trust <em>themselves</em>. If you don't make them certain this is the best program, they will never find the money. And certainty is contagious: if you're unsure, they're unsure. If you believe, they follow.</p>
+    <div class="quote">
+      <p>"You're creating double pain: their current problem plus asking them to pay. If you don't create massive certainty this is the best solution, you're just torturing them for nothing."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>This is why conviction outranks clever lines. You can't overcome an objection you don't believe is beatable — your hesitation leaks through the phone. Yuri's own certainty comes from knowing the refund policy, the coaching, and the thousands of closed deals cold. Internalize those until belief is automatic.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Newbie's hidden objection = fear of failing again. Sell them on themselves.</li>
+        <li>Make strong statements — you can't build certainty by only asking questions.</li>
+        <li>"Would you agree this is the best program out there? If not, give me one reason why not."</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 0.3 -->
+  <article class="card t-mindset" data-tags="type:mindset competitiveness gazelle benchmark self-analysis" data-title="Competitiveness predicts success">
+    <div class="eyebrow"><span class="tag">Mindset</span><span class="tag">Self-Analysis</span></div>
+    <h3>Competitiveness Is the #1 Predictor — Outrun the Slowest Gazelle</h3>
+    <p class="sit">You're 5th on an 8-person team and not studying 3rd and 4th. That's the problem.</p>
+    <p><span class="lead-in">If a salesperson isn't competitive, the odds of being good are close to zero.</span> The fix for the bottom of the board isn't mystery — it's comparison. Pull the transcripts of the reps just ahead of you, put them side by side with yours, and find the exact differences. Don't benchmark against the untouchable #1 who "talks too much" — benchmark against the replicable #2 and #3.</p>
+    <div class="quote">
+      <p>"The gazelle doesn't need to outrun the lion. She needs to outrun the slowest gazelle. That's the good news about being on the bottom — you can compare yourself."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>Generic self-assessment is worthless. "I need to close better" gets you nowhere. The work is specific: download ten of your demos, run them against a top rep's, and name the moves you're missing. Own your own data — buy your own AI, export your numbers, and study yourself like game film.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Compare transcripts side-by-side. Name specific gaps, not vibes.</li>
+        <li>Benchmark against the reachable rep above you, not the outlier at the top.</li>
+        <li>Deliberate practice &gt; more reps. Isolate one skill, drill it, get feedback, apply live.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 0.4 -->
+  <article class="card t-mindset" data-tags="type:mindset order-taker presentation no gene tension" data-title="Get to a no">
+    <div class="eyebrow"><span class="tag">Mindset</span><span class="tag">Gene's Law</span></div>
+    <h3>If You Didn't Get to a "No," You Didn't Sell</h3>
+    <p class="sit">You presented the platform, asked for the smallest number, and they said yes. That's not selling.</p>
+    <p><span class="lead-in">Presentation is not sales. Sales starts after the first "no."</span> Gene's sharpest diagnosis of the team: most reps demo the product and then ask for the lowest possible commitment. That's order-taking with extra steps. Getting to a "man, that's too much" is not failure — it's the <em>minimum bar</em> for having actually sold. A business owner who never feels the tension of a real number never makes a real decision.</p>
+    <div class="quote">
+      <p>"If you didn't get to 'man, that's too much' — if you didn't get to that point — you didn't even sell. Your title can basically be Senior Demo Presenter."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="quote">
+      <p>"That's when his juices start flowing. Otherwise he's just sitting there falling asleep. You HAVE to get to a no. You have to get to the point of tension."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="rulebox">You need to hear a NO. If you didn't get to a NO, you didn't sell — you presented.</div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>The "no" / point of tension is the start of the sale, not the end of the call.</li>
+        <li>If a prospect sails through with zero pushback and doesn't buy, you never gave them anything real to react to.</li>
+        <li>"No objection" is the worst objection — it means you never asked for the money.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 0.5 -->
+  <article class="card t-mindset" data-tags="type:mindset money apologize gene business-owner broke" data-title="Do not apologize for their money">
+    <div class="eyebrow"><span class="tag">Mindset</span><span class="tag">Gene's Law</span></div>
+    <h3>Don't Apologize for Their Money — They're Business Owners</h3>
+    <p class="sit">You hear "I don't have a number in mind" and immediately offer $500. Worst possible move.</p>
+    <p><span class="lead-in">If you feel bad asking for $5,000, you will never ask for $5,000.</span> Gene's challenge to the team is really about your internal story. "Broke" means different things to different people — the agent on your demo might have a rich spouse; the guy who says "$1,000" might be sitting on $50,000. You don't know, so stop deciding for them and stop protecting them from their own business decisions.</p>
+    <div class="quote">
+      <p>"You sound like you're apologizing in front of them. $500 is nothing. We spend $500 a minute over here. Stop sounding like you're apologizing for asking for the lowest $500."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <p>Business owners go broke — it's part of it. Your job is to help them find the path to the decision, not to save them from it. Fix the internal story first; the ask gets easy after that.</p>
+    <div class="quote">
+      <p>"I ask myself every single morning: where was I acting like a loser yesterday? And I go fix it. That's what working on yourself actually is."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Never put a number in their mouth. Make them think about their own business.</li>
+        <li>"Broke" is relative and often untrue on intake forms — don't pre-disqualify.</li>
+        <li>Your discomfort with the ask is the real bottleneck. Rebuild the story.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 0.6 -->
+  <article class="card t-mindset" data-tags="type:mindset ai future closing sdr replaceable" data-title="AI is coming for the easy job">
+    <div class="eyebrow"><span class="tag">Mindset</span><span class="tag">2026 Reality</span></div>
+    <h3>The Window for Easy Sales Is Closing — Learn to Actually Close</h3>
+    <p class="sit">The AI SDR now calls every new user 2× a day for 10 days before a rep is even involved.</p>
+    <p><span class="lead-in">The era of scooping easy closes off a fresh list is ending.</span> AI already out-books humans on the SDR task. That means the reps who survive are the ones who can genuinely <em>close on a demo</em> — not the ones who show up when the competition is thin and swoop the layups. Yuri said it plainly: get good quicker, or get replaced.</p>
+    <div class="quote">
+      <p>"You guys better start being good quicker or we'll be replacing people."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>Your defensible edge is the one thing AI can't do: build a real relationship with someone who didn't know ISTL existed until you called. That's the value. That's the commission argument. That's the job security.</p>
+    <div class="quote">
+      <p>"Hey, if I wouldn't have called this guy, you guys would never have gotten that money — that's the story you want to be telling."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Booking is being automated. Closing is the skill that keeps you employed.</li>
+        <li>Order-takers (PPC/hot-inbound only) are the first to be automated away.</li>
+        <li>Human edge = relationships you create, not deals that fell into your lap.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 1 -->
+<section class="part" id="part1">
+  <div class="part-head">
+    <div class="part-num">PART 01</div>
+    <h2>Before the Call</h2>
+    <p class="part-intro">Most demos are won or lost before the prospect ever picks up. Speed to the phone, knowing the market, deciding what you're selling, and one genuine human detail — this is the prep that separates a controlled call from a fishing trip.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 1.1 -->
+  <article class="card t-play" data-tags="stage:prep speed 30-second new-user pickup window" data-title="The 30-second window">
+    <div class="eyebrow"><span class="tag stage">Pre-Call</span><span class="tag">Speed to Lead</span></div>
+    <h3>The 30-Second Window Is the Only Guaranteed Pickup</h3>
+    <p class="sit">You save new-user calls for the end of the day. By then they're cold.</p>
+    <p><span class="lead-in">The single highest-leverage activity in your day is calling a new user within 30 seconds of registration.</span> It's the only moment on the entire platform where pickup is near-guaranteed, and it directly lifts downstream demo show rates. Most reps miss it because they're "organizing their pipeline" — which Yuri calls avoidance, not work.</p>
+    <div class="quote">
+      <p>"Unless you are on a demo right now, you should be calling new users. Not in two hours. Not at end of day. Now. Organizing a CRM full of people you're never going to call is avoidance, not work."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Call within 30 seconds of registration — it's the only guaranteed pickup.</li>
+        <li>Self-booked demos show up at far higher rates than platform/AI-routed ones.</li>
+        <li>"Organizing" leads you'll never call is procrastination wearing a productivity costume.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 1.2 -->
+  <article class="card t-play" data-tags="stage:prep market area-code county automatch thin-market research" data-title="Know the market before you dial">
+    <div class="eyebrow"><span class="tag stage">Pre-Call</span><span class="tag">Research</span></div>
+    <h3>Know the Market Before You Dial — Area Code Tells You the Play</h3>
+    <p class="sit">You're explaining the marketplace, filters, and sale leads to a prospect with two leads in their county.</p>
+    <p><span class="lead-in">The first three digits of the phone number are the area code — which is the market.</span> Check it before the call. If it's a thin market with a handful of leads, you already know the play: go straight to Auto Match, skip the full platform tour. If it's competitive, you know to anchor on volume and buy-box control. Deciding this <em>before</em> you dial is the difference between a guided demo and a fishing trip.</p>
+    <div class="quote">
+      <p>"If you have somebody with two leads in the market, you should know this before the call. Use all your willpower to push them to expand or go automatch. Don't explain sale leads to a two-lead market."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>Know the pricing reality of the market too. In hot metros there's no such thing as a cheap exclusive lead — say so early rather than letting the client set an impossible expectation.</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">Hot metros</div><div class="fd">CA / San Diego / Miami / Boston / Fresno: ~$200 floor, $275–375+ typical. $100 = zero leads.</div></div>
+      <div class="fcell"><div class="ft">Mid markets</div><div class="fd">Indiana &amp; comparable: $100 possible, $150–225 for solid flow.</div></div>
+      <div class="fcell"><div class="ft">Universal heuristic</div><div class="fd">Ask what they pay on PropertyLeads. Start there.</div></div>
+      <div class="fcell"><div class="ft">Thin market</div><div class="fd">Go straight to Auto Match. Skip the walkthrough. Push expansion.</div></div>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Area code → market → the play. Do this in the 3 seconds before you call.</li>
+        <li>Thin market = Auto Match only. Don't hand them a low-volume objection you didn't need to create.</li>
+        <li>Don't round your numbers ("17–29 leads" sounds real; "about 20" sounds scripted).</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 1.3 -->
+  <article class="card t-play" data-tags="stage:prep linkedin research human-connection gene personal" data-title="3 minutes of research">
+    <div class="eyebrow"><span class="tag stage">Pre-Call</span><span class="tag">Gene's Law</span></div>
+    <h3>Three Minutes of Research Kills the "Corporate" Feel</h3>
+    <p class="sit">Your calls feel generic because you walked in knowing nothing about the human on the other end.</p>
+    <p><span class="lead-in">Spend 3–5 minutes on LinkedIn, Instagram, or their background before every demo.</span> Find one real, genuine detail — motorcycles, a niche, a side business — and open with it. Not fake flattery. Real curiosity. It's the fastest way to stop sounding like "corporate" and start sounding like a person the prospect wants to keep talking to.</p>
+    <div class="quote">
+      <p>"Research the person, connect like a human, trial close early, close directly, and work the no."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <p>Put their name and company on the title slide. Hold pricing and packages until they're sold. And you don't need to be a real estate expert — you need enough fluency to follow the conversation. Confidence kills uncertainty faster than knowledge does.</p>
+    <div class="takeaway">
+      <div class="th">Before Every Demo — Checklist</div>
+      <ul>
+        <li>Check LinkedIn / IG / background — find one genuine talking point.</li>
+        <li>Know their niche and market. Put their name on the title slide.</li>
+        <li>Ask yourself: "What am I applying from Gene / Yuri today?"</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 1.4 -->
+  <article class="card t-play" data-tags="stage:prep decide sell package budget one-thing" data-title="Decide what you're selling">
+    <div class="eyebrow"><span class="tag stage">Pre-Call</span><span class="tag">Strategy</span></div>
+    <h3>Decide What You're Selling Before You Open Your Mouth</h3>
+    <p class="sit">You tour the whole platform hoping something sticks, then wonder why they're confused.</p>
+    <p><span class="lead-in">Walk in knowing the one or two packages you intend to pitch.</span> The budget question gives you the hint — use it, don't fixate on it. With a narrow market and a mid budget, the answer is usually Auto Match + a preload. Once you've decided, don't wander. Showing everything ("let me also show you the marketplace, Coupon Club, sale leads…") is how you talk yourself out of a deal and create objections you never needed.</p>
+    <div class="quote">
+      <p>"Know what you're trying to sell. If it's $499 — sell it as the best thing she's going to ever get. Don't show her the small one and say 'that's where you belong.'"</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Pin the 1–2 packages you'll pitch as early in discovery as possible.</li>
+        <li>Sell one thing as the best decision they'll ever make — don't tour the catalog.</li>
+        <li>Under $499 budget → Coupon Club only. Don't touch fixed price, balance mechanics, or sale leads.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 1.5 -->
+  <article class="card t-framework" data-tags="type:framework stage:prep cta plan-abc outbound goal" data-title="Know your CTA: Plan A/B/C">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag stage">Pre-Call</span></div>
+    <h3>Know Your CTA Before You Call — Plan A, B, and C</h3>
+    <p class="sit">Without a target outcome, you default to rambling and the prospect exits committing to nothing.</p>
+    <p><span class="lead-in">Every call needs three landing spots decided in advance.</span> If you don't know which one you're driving toward, every sentence drifts. Each thing you say on the call should be pulling toward one of these outcomes:</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">Plan A</div><div class="fd">They register and look at the platform now.</div></div>
+      <div class="fcell"><div class="ft">Plan B</div><div class="fd">They schedule a one-on-one call / demo.</div></div>
+      <div class="fcell"><div class="ft">Plan C</div><div class="fd">They agree to stay in touch and accept a follow-up.</div></div>
+    </div>
+    <p>The word <em>"might"</em> is your friend for pulling toward any of them: "You <em>might</em> be eligible for a couple of free leads depending on your market." It's not a promise — it's curiosity bait that keeps them on the phone.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Write down A/B/C before you dial. Never wing the destination.</li>
+        <li>Every sentence should pull toward one of the three.</li>
+        <li>"Might" opens the door without over-promising.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 1.6 -->
+  <article class="card t-play" data-tags="stage:prep testimonial credibility profile-match proof personal-brand" data-title="Pick the one testimonial + your credibility">
+    <div class="eyebrow"><span class="tag stage">Pre-Call</span><span class="tag">Proof</span></div>
+    <h3>Pick the One Testimonial — and Sharpen What Only You Can Say</h3>
+    <p class="sit">You send the same "guy closed $270K" screenshot everyone else sends. It blurs into noise.</p>
+    <p><span class="lead-in">For each demo, pick the single best testimonial where the prospect thinks "that's me."</span> Know it by heart. Lead with the profile match — product, market, background — not the raw dollar figure. A Dallas flipper hearing about another Dallas flipper is far more persuasive than any guru endorsement (prospects assume gurus are paid). Build a market map: for every metro you sell into, know one name, one number, one result.</p>
+    <div class="quote">
+      <p>"You should know which success stories are in which market. John Looney = Dallas. Don't rely on RJ Bates / guru endorsements — prospects assume they're paid."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>Same discipline applies to <em>your</em> credibility. The whole team sends identical outreach, so nobody stands out. Write 3–5 specific things only you can say — not "I'm a top closer," but real, personal, memorable details. Good sales orgs will ask in interviews what made you different. If you don't have an answer, you don't get hired.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>One profile-matched testimonial per demo, known cold. Lead with the match, not the money.</li>
+        <li>Frame it as a "recording / interview / training," never a "testimonial" (assumed paid).</li>
+        <li>Write your own 3–5 differentiators. Generic reps are interchangeable — and replaceable.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 2 -->
+<section class="part" id="part2">
+  <div class="part-head">
+    <div class="part-num">PART 02</div>
+    <h2>The Opening</h2>
+    <p class="part-intro">The first two minutes decide whether they trust you enough to tell you the truth. Credibility goes first, structure goes up front, and the sale is quietly won or lost long before anyone says the word "price."</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 2.1 -->
+  <article class="card t-play" data-tags="stage:open opening considering script first-line" data-title="The exact opening line">
+    <div class="eyebrow"><span class="tag stage">Opening</span><span class="tag">Script</span></div>
+    <h3>Open So They Can't Say "Not Interested"</h3>
+    <p class="sit">"Hi, is this a good time?" hands them the exit on a silver platter.</p>
+    <p><span class="lead-in">Your opening should assume the reason they're there and give them an easy, low-threat yes.</span> The word <em>"considering"</em> does the heavy lifting — it acknowledges they raised a hand without demanding commitment, so the reflexive "not interested" has nothing to grab onto.</p>
+    <div class="say">
+      <span class="lbl">Say it like this</span>
+      I see you were <em>considering</em> getting some motivated seller leads — I wanted to reach out personally before your account went cold. Do you have your phone or laptop handy for two minutes?
+    </div>
+    <p>Notice the structure: reason for the call, a personal touch ("personally," "before it went cold"), and a small physical ask (phone/laptop) that gets them <em>doing</em> something instead of deciding whether to talk to you.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>"Considering" lowers the threat and pre-frames their intent.</li>
+        <li>Open with a reason + a personal note + a tiny physical action.</li>
+        <li>Never ask a yes/no that lets them hang up ("is now a bad time?").</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 2.2 -->
+  <article class="card t-play" data-tags="stage:open credibility 12716 contracts proof number" data-title="The 12,716 credibility line">
+    <div class="eyebrow"><span class="tag stage">Opening</span><span class="tag">Proof</span></div>
+    <h3>Lead With the Number — 12,716 Contracts Signed</h3>
+    <p class="sit">They don't know you, your accent, or your company. Give them a reason to keep listening.</p>
+    <p><span class="lead-in">Drop the platform's hard proof number early, as a hook — not as a closer.</span> It's on the platform, in front of clients, so every rep should have it memorized and current. Used in the opening or the confirmation call, it reframes the whole conversation from "who is this person" to "this thing clearly works."</p>
+    <div class="say">
+      <span class="lbl">On the confirmation / opening call</span>
+      Did you know our users signed <em>12,716 contracts</em> last year through the platform? Most people haven't seen that number — and it's exactly what I'm going to walk you through.
+    </div>
+    <div class="quote">
+      <p>"I don't expect you to trust me. You see me for the first time and I have an accent. But look — do you really think if you get targeted leads you cannot find anywhere else, at this volume, you will not be successful?"</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Know the current contracts-signed number cold. Use the weekly one on confirmations ("400+ last week").</li>
+        <li>It's a hook to earn attention, not the final argument.</li>
+        <li>Name the accent / newness before they do — then redirect to the proof.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 2.3 -->
+  <article class="card t-play" data-tags="stage:open credibility-first trust lost-early rapport" data-title="The sale is lost 25 minutes before the objection">
+    <div class="eyebrow"><span class="tag stage">Opening</span><span class="tag">Trust</span></div>
+    <h3>The Sale Is Lost 25 Minutes Before the Objection Shows Up</h3>
+    <p class="sit">You handled the "I need to think about it" perfectly — and still lost. Because the real miss was at minute two.</p>
+    <p><span class="lead-in">Objections at the end are usually symptoms of trust you failed to build at the start.</span> When a prospect asks to "talk to other users" or "think about it," it rarely means they lack information — it means something you did or didn't do early left them unsure. If you diagnose that as a data problem and send references, you're answering the wrong question.</p>
+    <div class="quote">
+      <p>"When people tell me they want to talk to other users, it usually means something I shared — or didn't share — left them unsure. The trust problem started long before the objection."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>This is why the opening matters more than the close. Build the human connection, establish credibility, and surface concerns early — so there's no unspoken doubt waiting to detonate as a stall at the end.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>End-of-call stalls are trust debt from the opening coming due.</li>
+        <li>"Talk to other users" = a trust problem, not an information request. (90% never actually call the references.)</li>
+        <li>Invest the first minutes in connection + credibility to prevent the late objection entirely.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 2.4 -->
+  <article class="card t-play" data-tags="stage:open human-connection gene personal detail rapport" data-title="One real human detail">
+    <div class="eyebrow"><span class="tag stage">Opening</span><span class="tag">Gene's Law</span></div>
+    <h3>Open With One Real Human Detail</h3>
+    <p class="sit">You launch straight into the deck. The prospect braces for a pitch and goes cold.</p>
+    <p><span class="lead-in">Open with the genuine detail you found in prep — and mean it.</span> The goal isn't flattery; it's to be a human talking to a human before you're a salesperson talking to a lead. It takes the "corporate" edge off the whole call and buys you the goodwill you'll spend later during the close.</p>
+    <div class="quote">
+      <p>"Find one real detail about the prospect — motorcycles, their niche, a side business, anything genuine. Not fake flattery. Real curiosity. It makes the call less corporate."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="demo">
+      <div class="dh">Real Demo — Opening on a detail</div>
+      <p class="line"><span class="who">Rep:</span> Before we dive in — I saw you've been flipping in the Tarrant County area for a couple years now. How'd you get into that side of it?</p>
+      <p class="line"><span class="who p">Prospect:</span> Oh man, long story — started with my uncle's rental…</p>
+      <p class="line"><span class="who">Rep:</span> [lets them talk — now the call is a conversation, not a demo]</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Real curiosity &gt; scripted flattery. They can tell the difference instantly.</li>
+        <li>Let them talk. The detail is a door, not a checkbox.</li>
+        <li>Goodwill built here is spent later at the ask.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 2.5 -->
+  <article class="card t-play" data-tags="stage:open structure agenda control up-front frame" data-title="Structure the call up front">
+    <div class="eyebrow"><span class="tag stage">Opening</span><span class="tag">Control</span></div>
+    <h3>Set the Structure Up Front — Take Control Early</h3>
+    <p class="sit">No frame means the prospect drives, the demo sprawls, and you never reach the ask.</p>
+    <p><span class="lead-in">Tell them how the next few minutes will go, and get a micro-agreement to it.</span> A short agenda does three things at once: it signals you've done this before (credibility), it earns permission to ask questions (so discovery doesn't feel like an interrogation), and it lets you legitimately steer back on track when they wander.</p>
+    <div class="say">
+      <span class="lbl">Frame the call</span>
+      Here's what I'll do so I don't waste your time: I'll ask a couple quick questions about your business, show you exactly how this would work for your market, and if it's a fit we'll talk about getting you started today. If it's not, I'll tell you straight. Sound fair?
+    </div>
+    <p>"Sound fair?" is a small no-oriented yes — easy to agree to, and it pre-authorizes both the discovery questions and the close.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>A 15-second agenda earns permission to run the call your way.</li>
+        <li>Include the close in the frame ("if it's a fit, we'll get you started today") so the ask isn't a surprise.</li>
+        <li>Offer the honest out ("if it's not, I'll tell you straight") — it drops resistance.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 3 -->
+<section class="part" id="part3">
+  <div class="part-head">
+    <div class="part-num">PART 03</div>
+    <h2>Discovery</h2>
+    <p class="part-intro">Discovery is where the deal is actually built. Not "what do you do" — that's noise. The job is to surface the real trigger, quantify the gap, and get to a budget without putting the answer in their mouth. Every question here is load-bearing.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 3.1 -->
+  <article class="card t-framework" data-tags="type:framework stage:discovery most-least framework questions" data-title="The Most/Least framework">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag stage">Discovery</span></div>
+    <h3>The Most / Least Framework — Find the Real Driver Fast</h3>
+    <p class="sit">You ask a dozen surface questions and still don't know what actually moves this person.</p>
+    <p><span class="lead-in">Two questions cut through everything: what they want most, and what they're most afraid of.</span> "Most" surfaces the outcome that will make them buy; "least" surfaces the fear you have to neutralize before they will. Once you have both, you know exactly what to amplify and what to disarm — the rest of discovery is confirmation.</p>
+    <div class="say">
+      <span class="lbl">The two questions</span>
+      What's the <em>one thing</em> that would make this a home run for you this year? … And what's the thing you'd <em>least</em> want to happen — the part that's made you hesitate on stuff like this before?
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>"Most" = the outcome to amplify. "Least" = the fear to neutralize.</li>
+        <li>You can't sell certainty until you know which fear is blocking it.</li>
+        <li>Everything after these two questions is confirmation, not fishing.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3.2 -->
+  <article class="card t-play" data-tags="stage:discovery acknowledgment generic listening specific" data-title="Kill generic acknowledgments">
+    <div class="eyebrow"><span class="tag stage">Discovery</span><span class="tag">Listening</span></div>
+    <h3>Kill Generic Acknowledgments — Prove You Actually Heard Them</h3>
+    <p class="sit">"Oh nice, that's great!" tells the prospect you're waiting to talk, not listening.</p>
+    <p><span class="lead-in">Replace empty reactions with a specific reflection of what they just said.</span> Generic acknowledgments ("gotcha," "awesome," "makes sense") signal a script running on autopilot. A specific one proves you're present and quietly builds the trust that prevents late-call stalls. This is the same instinct behind Voss's labeling — name what you heard.</p>
+    <div class="demo">
+      <div class="dh">Real Demo — generic vs. specific</div>
+      <p class="line"><span class="who p">Prospect:</span> I tried cold calling for six months and burned out — never closed a thing.</p>
+      <p class="line"><span class="who p" style="color:var(--red)">Weak:</span> Gotcha, yeah, a lot of people say that. Anyway—</p>
+      <p class="line"><span class="who" style="color:var(--green)">Strong:</span> Six months of dialing with nothing to show for it — that's brutal. So it sounds like the issue was never effort, it was where the leads were coming from.</p>
+    </div>
+    <div class="quote">
+      <p>"When a client gives you an objection or a strange answer, the default reaction should be curiosity, not acceptance or pushback. Always ask why before reacting."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Reflect the specific thing they said, then label the emotion under it.</li>
+        <li>"Animals react. People think." Pause, paraphrase, re-engage — never fire a rehearsed line.</li>
+        <li>Same objection twice = your strategy is wrong. Change the pattern, don't repeat.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3.3 -->
+  <article class="card t-framework" data-tags="type:framework stage:discovery spin implication situation problem veteran buyer:veteran" data-title="SPIN — stop asking situation questions">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag buyer">Veteran</span></div>
+    <h3>SPIN — More "What Do You Do" Questions = Worse Close Rate</h3>
+    <p class="sit">You spent ten minutes confirming markets and deal types. The prospect is bored and no closer to buying.</p>
+    <p><span class="lead-in">Rackham's research on 35,000 calls found Situation questions <em>negatively</em> correlate with closing.</span> "What markets? Wholesale or flip?" adds zero emotional weight. Top performers move fast to Problem and Implication — the questions that make the prospect feel the cost of staying where they are. Run the sequence:</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">Situation (minimize)</div><div class="fd">"What markets do you work?" — gather the bare minimum, then move on.</div></div>
+      <div class="fcell"><div class="ft">Problem</div><div class="fd">"You did 25 deals but you're targeting 50 — what's the bottleneck stopping you from just doing more?"</div></div>
+      <div class="fcell"><div class="ft">Implication (the killer)</div><div class="fd">"If you don't find a new lead source by Q2, what happens to that 50-deal target? You're at 8 now — that math gets tight fast."</div></div>
+      <div class="fcell"><div class="ft">Need-Payoff</div><div class="fd">"If a platform gave you 50+ exclusive leads a month in Dallas at $100 each, would that solve the volume problem?"</div></div>
+    </div>
+    <div class="demo">
+      <div class="dh">Real Demo — what Lucas missed (Mar 11 role-play)</div>
+      <p class="line"><span class="who p">Prospect:</span> Did 25 deals last year, want to hit 50. Done 8 so far.</p>
+      <p class="line"><span class="who">Coach note (Yuri):</span> He literally told you he's behind pace. That's a gift. Lucas stayed on Situation and never unwrapped it — no Implication question, no urgency, deal walked.</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Cut Situation questions to the minimum. They bore experienced buyers and lower close rates.</li>
+        <li>Implication is where urgency is manufactured — connect the gap to a real deadline and cost.</li>
+        <li>When a veteran hands you their target vs. current pace, that math <em>is</em> your close setup.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3.4 -->
+  <article class="card t-play" data-tags="stage:discovery why-now trigger shifted surface pain" data-title="Why now? What shifted?">
+    <div class="eyebrow"><span class="tag stage">Discovery</span><span class="tag">Trigger</span></div>
+    <h3>"Why Now? What Shifted?" — Dig Past the Surface Answer</h3>
+    <p class="sit">9 out of 10 say "I just saw your ad." That's the surface. It's not the real answer.</p>
+    <p><span class="lead-in">The best opener in discovery is "how long have you been thinking about this, and why now?"</span> — followed by one more push past the reflex answer. The real trigger (a divorce, an inherited property, getting burned by the last vendor, scaling pressure) is almost always sitting one question underneath. People give surface answers by default. The pain is there; one more question earns it.</p>
+    <div class="say">
+      <span class="lbl">The follow-through question</span>
+      Totally get it — but has something <em>shifted</em> that makes this more of a priority right now versus, say, six months ago?
+    </div>
+    <div class="quote">
+      <p>"'I just saw your ad' is the surface, not the real answer. Push through it — the real trigger is almost always underneath. Five seconds of guts on every call."</p>
+      <p class="by">TJ Serafini</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>"Why now / what shifted" beats every other discovery opener.</li>
+        <li>The first answer is a reflex. The second answer is the truth.</li>
+        <li>Works on B2C demos, B2B partner calls, and re-engagement equally.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3.5 -->
+  <article class="card t-play" data-tags="stage:discovery modifier-words confidence language weak" data-title="Cut the modifier words">
+    <div class="eyebrow"><span class="tag stage">Discovery</span><span class="tag">Language</span></div>
+    <h3>Cut the Modifier Words — They Leak Doubt</h3>
+    <p class="sit">"So this could maybe help you kind of get a few more leads, if that makes sense?"</p>
+    <p><span class="lead-in">Softeners like "just," "maybe," "kind of," "a little," "hopefully," and "if that's okay" broadcast that you don't believe your own pitch.</span> They're verbal apologies. Strip them out and the same sentence lands with authority — which is what transfers certainty to the prospect. Filler ("uh," "let me check," "what do I have here") does the same damage and signals low confidence.</p>
+    <div class="demo">
+      <div class="dh">Real Demo — same line, doubt removed</div>
+      <p class="line"><span class="who p" style="color:var(--red)">Weak:</span> This could maybe get you a few more leads, if that makes sense?</p>
+      <p class="line"><span class="who" style="color:var(--green)">Strong:</span> This gets you exclusive leads in your market that you can't find anywhere else. Here's how.</p>
+    </div>
+    <div class="rulebox">Every word must earn its place. If you can cut it without losing meaning — cut it. Texts, emails, and scripts equally.</div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Kill "just / maybe / kind of / hopefully / if that's okay."</li>
+        <li>Eliminate filler — "uh," "let me check" — it reads as low confidence.</li>
+        <li>Make statements. Certainty can't ride on softened language.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3.6 -->
+  <article class="card t-play" data-tags="stage:discovery two-second-rule silence pause listen" data-title="The 2-second rule">
+    <div class="eyebrow"><span class="tag stage">Discovery</span><span class="tag">Silence</span></div>
+    <h3>The 2-Second Rule — Let the Silence Do the Work</h3>
+    <p class="sit">You ask a good question, then panic and answer it yourself two beats later.</p>
+    <p><span class="lead-in">After you ask something that matters, stop talking for a full two seconds — or longer.</span> The instinct to fill silence is where reps talk themselves out of the truth. The prospect will fill it, and what they say in that gap is usually the real answer. This is doubly true after the budget ask and after the close.</p>
+    <div class="quote">
+      <p>"The silence after a question is not your enemy. Sit in it. They will fill it. Every time. Don't put the answer in their mouth."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Ask, then go quiet. Count to two before you consider speaking.</li>
+        <li>Whoever speaks first after the ask usually loses the point.</li>
+        <li>Most critical after the budget question and after the close.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3.7 -->
+  <article class="card t-play" data-tags="stage:discovery budget anchor push-up gene 5000 broke buyer:broke money" data-title="Budget — anchor high, push it up">
+    <div class="eyebrow"><span class="tag stage">Discovery</span><span class="tag">Gene's Law</span></div>
+    <h3>The Budget Question — Anchor High, Then "Can We Push That Up?"</h3>
+    <p class="sit">They say "I don't really have a number in mind" and you blurt "how about $500?" Deal capped.</p>
+    <p><span class="lead-in">Never put the number in their mouth, and never anchor low.</span> Ask what their business deserves, sit in the silence, and whatever they say — push it up once. Gene's whole point: if you're comfortable asking for $5,000, you'll find out who can actually pay it. If you anchor at $500, you'll never know.</p>
+    <div class="say">
+      <span class="lbl">Instead of "how about $500?"</span>
+      What do you think your business deserves to invest in it to <em>really</em> take off? … [silence] … Okay — can we push that up a little? What do you think about giving it a real shot?
+    </div>
+    <div class="quote">
+      <p>"What? You haven't thought about it? It's your business, buddy. You can't just say 'how about $500?' What if the guy is sitting on $20,000?"</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="quote">
+      <p>"Nobody asks that question — 'can we push that up a little?' It's uncomfortable. For me it's comfortable. It got Chris Rude so much money. You have no idea."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <p>Timing matters: ask budget <em>after</em> one or two pain questions, not cold. And give a range so they self-select up — "we have deals from $499 all the way to $10,000; assuming you like what you see, what are you comfortable with?"</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Anchor at the top ($5,000). You can always go down — never back up.</li>
+        <li>After any number they give: "Can we push that up a little?" Every time.</li>
+        <li>Ask after 1–2 pain questions, framed as a range. Never cold, never low.</li>
+        <li>"$499 is a good budget to start" is banned — it's the minimum entry, not a good target.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3.8 -->
+  <article class="card t-framework" data-tags="type:framework stage:discovery disc profile personality d i s c buyer:buyer buyer:agent" data-title="Read the DISC profile">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag stage">Discovery</span></div>
+    <h3>Read the DISC Profile — Match Your Pitch to Their Wiring</h3>
+    <p class="sit">You run the same pitch on a data-driven operator and a vision-driven newbie. One of them tunes out.</p>
+    <p><span class="lead-in">Tag the prospect D / I / S / C in the first few minutes and adjust how you sell — not what you sell.</span> Profile them from prior notes and how they answer discovery, then keep the approach below in a second tab during the demo.</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">D — Direct / data-driven</div><div class="fd">High operators, 3–5+ deals/mo. Lead with numbers and ROI: cost per lead, cost per acquisition, target volume. No fluff.</div></div>
+      <div class="fcell"><div class="ft">I — Relationship / vision</div><div class="fd">Often newer. Sell the vision, time savings, community stories. Draw out the pain — lost time, missed deals. Avoid heavy analytics.</div></div>
+      <div class="fcell"><div class="ft">S — Risk-averse</div><div class="fd">Don't want to be sold. Be an advisor. Use case studies. Takeaway close: "might not be for you — let's find out."</div></div>
+      <div class="fcell"><div class="ft">C — Numbers / budget</div><div class="fd">Often a partner dynamic. Frame the cost of inaction. Lead with lead-to-close ratio and timelines. Minimize risk framing.</div></div>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>DISC changes your <em>delivery</em>, not the offer. Tag them early.</li>
+        <li>D and C want math; I and S want story and safety.</li>
+        <li>Pair it with the profile-matched testimonial for that type.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+
+<!-- ============================================================ PART 4 -->
+<section class="part" id="part4">
+  <div class="part-head">
+    <div class="part-num">PART 04</div>
+    <h2>The Pitch</h2>
+    <p class="part-intro">The demo is not a product tour. Its real job is trust and time — enough of both that they'll say yes. Get to the package faster, sell the program not the leads, and tailor the story to who's actually on the call.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 4.1 -->
+  <article class="card t-play" data-tags="stage:pitch demo purpose trust time explain-less" data-title="The demo's real job is trust not explanation">
+    <div class="eyebrow"><span class="tag stage">The Pitch</span><span class="tag">Philosophy</span></div>
+    <h3>The Demo's Real Job Is Trust, Not Explanation</h3>
+    <p class="sit">You spend 30 minutes walking every filter and menu. They're tired, and no closer to buying.</p>
+    <p><span class="lead-in">People forget almost everything you show them. The demo exists to buy you time to build trust — not to transfer platform knowledge.</span> The onboarding/CSM call is where mechanics get taught. On the demo, the more minutes you sit with them as a credible human, the higher your close rate climbs. Explaining the platform for its own sake actively works against you.</p>
+    <div class="quote">
+      <p>"The whole idea of them sitting on your demos is not for you to explain the platform. It's for you to have more time to sell them on the thing we think we can sell them."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="quote">
+      <p>"We have a bunch of youngsters with accents who never worked in B2B/B2C sales, going against competitors. I need them to sit more time with you so they trust you more."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Trust closes deals; feature dumps don't. Optimize the demo for time-with-you.</li>
+        <li>Platform mechanics belong on the onboarding call — say so out loud.</li>
+        <li>A one-hour demo full of explaining usually means the original pitch was weak.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 4.2 -->
+  <article class="card t-play" data-tags="stage:pitch package faster structure credibility budget gene" data-title="Go to the package faster">
+    <div class="eyebrow"><span class="tag stage">The Pitch</span><span class="tag">Structure</span></div>
+    <h3>Go to the Package Faster — Credibility → Budget → Package → Close</h3>
+    <p class="sit">You front-load 30 minutes of platform before ever naming a price. They've checked out by the pitch.</p>
+    <p><span class="lead-in">The new demo structure Yuri and Gene landed on is short: credibility, then the budget question, then straight to how their money gets used — then close.</span> Show them where their balance goes, how the coupon applies, and stop. Onboarding handles the rest.</p>
+    <div class="quote">
+      <p>"We explained the platform too long. Go from: what's the budget, how much can you invest — and just show them how they'll use that budget. This is where your balance goes. This is how you apply the coupon. That's it."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="say">
+      <span class="lbl">Compress the middle</span>
+      After you get started, we sit down together, activate your automated Coupon Club, set your parameters, and you start getting leads. <em>That's</em> the platform walkthrough — on the onboarding call. Right now let's make sure this is a fit and get you rolling.
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Four beats: credibility → budget → package → close. Cut everything else.</li>
+        <li>Show only how <em>their</em> budget gets used, not the whole product.</li>
+        <li>"Can we make it happen, or do you want to start smaller?" — always aim up first.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 4.3 -->
+  <article class="card t-play" data-tags="stage:pitch sell-the-program not-leads value program yuri" data-title="Sell the program not the leads">
+    <div class="eyebrow"><span class="tag stage">The Pitch</span><span class="tag">Yuri's Law</span></div>
+    <h3>Sell the Program, Not the Leads</h3>
+    <p class="sit">You pitch "leads from $29" and get haggled to the floor on price-per-lead.</p>
+    <p><span class="lead-in">Leads are a commodity to argue about. The program is a transformation.</span> The bigger package isn't just more leads — it's more bonuses, CSM attention, coaching, community, and lead-backs. Frame the whole ecosystem and the price-per-lead debate disappears. This is also just math: bigger package = more chances = better treatment = higher success.</p>
+    <div class="quote">
+      <p>"Nobody has a smaller package with higher success than the guy with the bigger package. We treat them better. They get more bonuses. They go on CSM calls."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="quote">
+      <p>"This is not a lead source. We change people's lives."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="demo">
+      <div class="dh">Real Demo — reframing off price-per-lead</div>
+      <p class="line"><span class="who p">Prospect:</span> So it's like $29 a lead? PropertyLeads is cheaper on some.</p>
+      <p class="line"><span class="who">Rep:</span> If this were only about lead price I'd tell you to shop around. But you're not buying leads — you're buying exclusive motivated sellers you can't get anywhere else, plus the coaching, the community, the CSM who fixes your parameters when something's off. The $29 lead is the thing that closed $40K for Jonathan Collins. That's the program.</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Reframe from "leads" (commodity) to "program" (transformation).</li>
+        <li>Bigger package = more bonuses + CSM + coaching + lead-backs. Name them.</li>
+        <li>We treat big spenders differently — say it plainly on the demo.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 4.4 -->
+  <article class="card t-framework" data-tags="type:framework stage:pitch value-stack would-that-be-helpful yuri" data-title="The would-that-be-helpful value stack">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag stage">The Pitch</span></div>
+    <h3>The "Would That Be Helpful?" Value Stack</h3>
+    <p class="sit">You list features. They nod politely and feel nothing.</p>
+    <p><span class="lead-in">Turn every feature into a benefit the prospect confirms out loud.</span> Stack value instead of cutting price: name a thing, tie it to their goal, then ask "would that be helpful?" Each yes is a micro-commitment, and the stack builds the certainty that makes the price feel small.</p>
+    <div class="say">
+      <span class="lbl">The stack</span>
+      You'd get a month to practice with the AI role-play bot trained on 700 real seller calls — so you're not burning live leads while you learn. <em>Would that be helpful?</em> … You also get monthly coaching with RJ Bates where you can ask anything. <em>Is there any way you wouldn't want that?</em>
+    </div>
+    <div class="quote">
+      <p>"What if you could ask RJ Bates once a month all the questions you got? And that's included. Is there any way you wouldn't pull the trigger on that?"</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Feature → benefit tied to their goal → "would that be helpful?"</li>
+        <li>Each confirmed yes is a brick in the certainty wall.</li>
+        <li>Stack value to shrink price; never cut price to win the moment.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 4.5 -->
+  <article class="card t-play" data-tags="stage:pitch lead-flow chain quality-hub sale-leads walkthrough yuri" data-title="Walk the lead-flow chain">
+    <div class="eyebrow"><span class="tag stage">The Pitch</span><span class="tag">Demo Element</span></div>
+    <h3>Walk the Lead-Flow Chain — The One Visual That Sells Quality</h3>
+    <p class="sit">Client thinks "Sale leads" means leftovers. You never showed them where leads actually come from.</p>
+    <p><span class="lead-in">Yuri's most-skipped high-value demo element: draw the full lead journey, visually, on every call.</span> It pre-empts the sale-leads objection and proves quality before anyone doubts it.</p>
+    <ol>
+      <li>Thousands of digital + cold-call leads with recordings come in.</li>
+      <li>Quality Hub — AI screens and discards 33–35% of bad leads.</li>
+      <li>Transcripts and parameters checked.</li>
+      <li>If a fixed-price buyer exists in that market → lead goes to them instantly (highest quality, fastest path).</li>
+      <li>If not → marketplace for 24 hours as an exclusive lead.</li>
+      <li>Unclaimed after 24h → Sale status: same screening, same quality, discounted, non-exclusive, still under the 21-day refund policy.</li>
+    </ol>
+    <div class="rulebox">Sale does NOT mean lower quality. It means 24 hours passed and no one bought it exclusively. The only real difference is speed-to-lead.</div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Draw the chain by hand / screen-share on every demo. It's the answer to the sale-leads objection.</li>
+        <li>Analogy: "You get a high-quality lead at a discount because exclusive buyers can't keep up with our volume."</li>
+        <li>Note the AB test: "Sale Leads" is being renamed "Non-Exclusive Leads" — brief clients on exclusivity, not discount.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 4.6 -->
+  <article class="card t-play" data-tags="stage:pitch expertise be-the-expert dont-show-everything filter yuri" data-title="Be the expert, don't dump data">
+    <div class="eyebrow"><span class="tag stage">The Pitch</span><span class="tag">Control</span></div>
+    <h3>Be the Expert — Don't Hand Them Data That Creates Objections</h3>
+    <p class="sit">You show live lead volume in a thin county. You just handed them a reason to say no.</p>
+    <p><span class="lead-in">More transparency is not more trust. More expertise is more trust.</span> You are the information filter — your job is to contextualize data, not dump it. A feature that removes your ability to frame the conversation is a feature that hurts your close rate. Stop hiding behind the platform; own the sale.</p>
+    <div class="quote">
+      <p>"There is no platform, no mailer, no cold-calling operation that gets you exclusive motivated seller leads in San Diego for $100. Not us, not anyone. You need to expand your geography or raise your price. Here's what I'd recommend..."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>That's disqualification with authority — educating, not apologizing. It reads as expertise and it either fixes the expectation or cleanly ends a deal that was never going to work.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Don't show raw volume/pricing floors that manufacture objections.</li>
+        <li>Contextualize every number — you're the filter, not a dashboard.</li>
+        <li>Disqualify with authority when the market truly can't support them.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 4.7 -->
+  <article class="card t-play" data-tags="stage:pitch buyer:buyer buyer:agent buyer:newbie buyer:veteran role-specific tailor" data-title="Tailor the pitch to who's on the call">
+    <div class="eyebrow"><span class="tag stage">The Pitch</span><span class="tag buyer">Buyer</span><span class="tag buyer">Agent</span></div>
+    <h3>Tailor the Pitch — Buyer, Agent, Newbie, Veteran Each Hear a Different Story</h3>
+    <p class="sit">You run the wholesaler script on an agent. They don't "close deals" — they "get listings." You've lost them.</p>
+    <p><span class="lead-in">The script has role-specific sections. Most reps skip them and default to wholesaler language for everyone.</span> Match the world and the words to who's actually on the call.</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">Buyer</div><div class="fd">Highest spend, lowest activation. Sell the identity shift: "Save the $10K assignment fee, call the seller yourself, set your terms. Are you ready to be a closer?"</div></div>
+      <div class="fcell"><div class="ft">Agent</div><div class="fd">They get <em>listings</em>, not deals; no splits on our leads; sellers have stated intent. Educate: no commission, no lock-in, exclusive, pause anytime.</div></div>
+      <div class="fcell"><div class="ft">Newbie</div><div class="fd">Sell certainty + the ecosystem (coaching, community, role-play bot). Don't overload with platform. Get them invested and rolling.</div></div>
+      <div class="fcell"><div class="ft">Veteran</div><div class="fd">Teach/tailor/take control (Challenger). Skip Situation questions. "Your existing sources can't scale linearly past deal 30 — here's the fix."</div></div>
+    </div>
+    <div class="quote">
+      <p>"You have to go watch podcasts of agents talking to agents in agent language. Same with wholesalers — watch Steve Trang. This is part of your job."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Agents get listings; wholesalers lock contracts; buyers change identity. Use their language.</li>
+        <li>Buyers = biggest under-exploited segment: highest checks, lowest activation. Pitch them harder.</li>
+        <li>Always ask agents team size + brokerage — group deals available.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 5 -->
+<section class="part" id="part5">
+  <div class="part-head">
+    <div class="part-num">PART 05</div>
+    <h2>Trial Closing</h2>
+    <p class="part-intro">Trial closes are how you take the temperature without asking for the sale. Run them throughout the demo — two or three minimum — so you catch objections while there's still time to handle them. This is Gene's mandate and Cardone's playbook, fused.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 5.0 the mandate -->
+  <article class="card t-play" data-tags="stage:trialclose gene trial-close mandate temperature throughout" data-title="Trial close early and often">
+    <div class="eyebrow"><span class="tag stage">Trial Close</span><span class="tag">Gene's Law</span></div>
+    <h3>Trial Close Early and Often — Don't Save It for the End</h3>
+    <p class="sit">You present start to finish, then ask one closing question at minute 40 and get blindsided.</p>
+    <p><span class="lead-in">"What do you think so far?" must happen 2–3 times per call.</span> Gene flagged "no trial closes" as one of the five things killing the team's demos. Each trial close surfaces hidden resistance while you still have runway to fix it — and reads the room so you don't keep pushing slides at a prospect who's already gone flat.</p>
+    <div class="quote">
+      <p>"Seed the close early: 'If this makes sense, we can start today.' And read the room — stop pushing slides if they're flat."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Minimum 2–3 trial closes per demo — early, middle, and pre-close.</li>
+        <li>A hesitation on a trial close is a gift: handle it now, not at the end.</li>
+        <li>Flat responses mean stop presenting and start diagnosing.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 5.1 The Cardone 10 -->
+  <article class="card t-framework" data-tags="type:framework stage:trialclose cardone ten trial-closes temperature feel clarity" data-title="The Cardone 10 trial closes">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag stage">Trial Close</span></div>
+    <h3>The Cardone 10 — A Trial Close for Every Moment</h3>
+    <p class="sit">You only know one closing question, so you use it once and hope.</p>
+    <p><span class="lead-in">Ten trial closes, each with a job. Drop them throughout — they tell you exactly where you stand without guessing.</span></p>
+
+    <div class="sub">01 · The Temperature Check</div>
+    <div class="say">"How does this look to you so far?"</div>
+    <p>Drop it 5–10 minutes in. "Good" = on track. Hesitation = stop and address it now, not at the end.</p>
+
+    <div class="sub">02 · The Feel Check</div>
+    <div class="say">"Does this feel like something that could work for your business?"</div>
+    <p>Feelings close deals, not logic. Moves them from evaluating features to imagining ownership.</p>
+
+    <div class="sub">03 · The Clarity Check</div>
+    <div class="say">"Is there anything I haven't explained clearly that's holding you back?"</div>
+    <p>Smokes out hidden objections without sounding defensive. Frames you as their advocate.</p>
+
+    <div class="sub">04 · The Timeline Anchor</div>
+    <div class="say">"If this made sense, would you be the type to start today or wait?"</div>
+    <p>Reveals their decision pattern before you close. "I'd wait" hands you the real objection early.</p>
+
+    <div class="sub">05 · The Value Confirmation</div>
+    <div class="say">"Based on what you've seen — do you see the value here?"</div>
+    <p>Get explicit agreement on value first. Skip this and you'll wonder why they said no.</p>
+
+    <div class="sub">06 · The Excitement Read</div>
+    <div class="say">"What's your excitement level, 1 to 10?"</div>
+    <p>Below 7 — ask what would make it a 10. 7+ — they're close, ask for the sale.</p>
+
+    <div class="sub">07 · The Urgency Test</div>
+    <div class="say">"Is there a reason this wouldn't make sense to start this week?"</div>
+    <p>Flips the burden — they have to justify NOT starting, which is psychologically harder.</p>
+
+    <div class="sub">08 · The Partner / Boss Check</div>
+    <div class="say">"Is there anyone else who'd need to be part of this before you moved forward?"</div>
+    <p>Ask EARLY, never at the close. Discovering the real decision-maker late is a classic blunder.</p>
+
+    <div class="sub">09 · The Assumptive Forward</div>
+    <div class="say">"Once we get you set up — what zip codes would you target first?"</div>
+    <p>You've assumed the sale without asking. If they answer, they're bought in.</p>
+
+    <div class="sub">10 · The Recap Close</div>
+    <div class="say">"So we agree the leads are there, the platform works, and you need more deals — what would stop you from starting today?"</div>
+    <p>Stack the yes's you've collected, then ask them to justify not buying. The final ask is just connecting the dots.</p>
+
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Match the close to the moment: temperature early, partner-check early, recap at the end.</li>
+        <li>The excitement read (1–10) gives you a number to work with instead of a guess.</li>
+        <li>After any trial close — stop talking. Let the answer land.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 6 -->
+<section class="part" id="part6">
+  <div class="part-head">
+    <div class="part-num">PART 06</div>
+    <h2>The Close</h2>
+    <p class="part-intro">Everything so far was setup. The close is where you ask directly, anchor high, create a reason to move today, and then go silent. No dancing, no "let me know" — ask for the money and work the no.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 6.1 -->
+  <article class="card t-play" data-tags="stage:close ask directly money card gene visa no-dancing" data-title="Ask directly for the money">
+    <div class="eyebrow"><span class="tag stage">The Close</span><span class="tag">Gene's Law</span></div>
+    <h3>Ask Directly for the Money — No Dancing</h3>
+    <p class="sit">You soften the ask into oblivion: "So, um, this is a little over budget, but can I tell you why?"</p>
+    <p><span class="lead-in">Say the words: buy, invest, start today, card.</span> Being uncomfortable asking for money was one of Gene's five flagged problems. The strength behind the ask signals how much you believe in the product. Weak ask, weak belief, weak close.</p>
+    <div class="quote">
+      <p>"Passable: 'Is there any reason you shouldn't start today?' Better: 'Are you ready to invest in this today?' / 'Visa or Mastercard?' After you ask — stop talking. Silence works."</p>
+      <p class="by">Gene Blinkov</p>
+    </div>
+    <div class="quote">
+      <p>"It should be with strength — is there any way you can make this one happen? Because loaded investors don't lose this way."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Use direct verbs: buy, invest, start, card. No hedging.</li>
+        <li>Ask with strength — the energy transfers belief.</li>
+        <li>After the ask: silence. Whoever speaks first loses the point.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 6.2 -->
+  <article class="card t-framework" data-tags="type:framework stage:close anchor descend push-ceiling gene budget" data-title="Anchor high, then descend">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag stage">The Close</span></div>
+    <h3>Push the Ceiling Before You Come Down</h3>
+    <p class="sit">You open at $499 and they say yes — leaving thousands on the table you'll never recover.</p>
+    <p><span class="lead-in">Start at the biggest package. Make the case with conviction. Get a hard "no way" before you offer anything smaller.</span> Once you've handled every objection at the top, sliding down is effortless — the work is already done. And closing below their real budget isn't a win.</p>
+    <div class="quote">
+      <p>"The more you squeeze on the big one, the easier it will be on the small one. Until they told you it's impossible, going down is a very stupid thing to do."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="quote">
+      <p>"Maybe it was a $10K budget there. Closing $3K on a $10K budget — nothing to be proud about."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="rulebox">Anchor at $5,000. You can always go down. You can never go back up.</div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Exhaust objections at the top package before descending.</li>
+        <li>Ask "is there any way you can make this happen?" — twice, with strength.</li>
+        <li>A close well below budget means you didn't really try. Not a win.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 6.3 -->
+  <article class="card t-play" data-tags="stage:close assumptive two-option monthly annual close" data-title="Assumptive and two-option closes">
+    <div class="eyebrow"><span class="tag stage">The Close</span><span class="tag">Technique</span></div>
+    <h3>Assumptive &amp; Two-Option Closes — Remove the Yes/No</h3>
+    <p class="sit">"Do you want to move forward?" gives them a clean no. Don't offer it.</p>
+    <p><span class="lead-in">Close on <em>which</em>, not <em>whether</em>.</span> The assumptive close presumes the sale and asks a logistics question. The two-option close replaces yes/no with a choice between two yeses — then you stop talking.</p>
+    <div class="say">
+      <span class="lbl">Assumptive</span>
+      Any reason why we wouldn't move forward and get you set up today?
+    </div>
+    <div class="say">
+      <span class="lbl">Two-option (then silence)</span>
+      Most people go monthly, but the annual saves you 50%. Which one do you want me to set up?
+    </div>
+    <div class="quote">
+      <p>"Don't ask 'are we moving forward' — ask 'which one do you prefer, or do you want to start with both?'"</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Ask which, not whether. Both answers are a sale.</li>
+        <li>State the option, then go completely silent.</li>
+        <li>"Do you believe the product can help you, or do you believe you can close?" — the emotional decision point.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 6.4 -->
+  <article class="card t-play" data-tags="stage:close sweetener close-condition bonus lead-pack yuri" data-title="Sweeteners need a close condition">
+    <div class="eyebrow"><span class="tag stage">The Close</span><span class="tag">Discipline</span></div>
+    <h3>Every Sweetener Needs a Close Condition First</h3>
+    <p class="sit">You throw in bonus balance to "help," they take it and still say they'll think about it.</p>
+    <p><span class="lead-in">Never give away value without a yes attached.</span> Bonus balance is refundable and costs ISTL real money. Before you offer anything, get the conditional commitment. If the answer to "if I make it work, are you in?" isn't yes — you offer nothing.</p>
+    <div class="quote">
+      <p>"If I can make it work, are you signing up right now? If the answer isn't yes, don't offer anything."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>"Yes if…" comes before any sweetener. No exceptions.</li>
+        <li>Offer lead pack first, bonus balance only if still needed.</li>
+        <li>Sweeteners without conditions train prospects to stall for more.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 6.5 -->
+  <article class="card t-play" data-tags="stage:close urgency client-first scarcity today financing yuri" data-title="Client-first urgency">
+    <div class="eyebrow"><span class="tag stage">The Close</span><span class="tag">Urgency</span></div>
+    <h3>Client-First Urgency — Give a Real Reason to Move Today</h3>
+    <p class="sit">"Let me lock it in for you" is transparent. They see the tactic and it backfires.</p>
+    <p><span class="lead-in">The reason to act today must serve the client, not you.</span> Make it concrete and ROI-framed. Real scarcity ("spots left," promo ending) works when it's true and specific; discount-framing signals desperation, so frame the cost of <em>waiting</em> instead.</p>
+    <div class="quote">
+      <p>"This promo gets you 20 extra leads compared to the standard package. That's a potential game changer on ROI."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="quote">
+      <p>"You should say: my manager just sold today, it's rolling, people are signing up — and actually tell them, 17 spots left."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>If price is the wall, financing is the bridge: available from $1,499 via AfterPay, Affirm, Klarna. "Most people find a way when they decide they want to — where do you think you could find it?"</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Urgency must benefit the client (extra leads/ROI), not just "lock it in."</li>
+        <li>Discount-framing = desperation. Frame the cost of waiting.</li>
+        <li>Financing from $1,499 turns "too much" into "which plan."</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 6.6 -->
+  <article class="card t-play" data-tags="stage:close draw-the-line exit clean follow-up no yuri" data-title="Draw the line, then exit clean">
+    <div class="eyebrow"><span class="tag stage">The Close</span><span class="tag">Discipline</span></div>
+    <h3>Draw the Line — Then Exit Clean to Follow-Up</h3>
+    <p class="sit">The deal's not closing today, so you linger, over-explain, and sour the relationship.</p>
+    <p><span class="lead-in">Make one strong, direct ask for today. If it's a genuine no, don't grovel — set the follow-up and exit clean.</span> A well-placed "no today" that preserves the relationship is worth more than ten minutes of desperate pushing that burns it.</p>
+    <div class="say">
+      <span class="lbl">The clean line</span>
+      Totally fair. Last thing — is there any way to make this work today, given the bonus comes off tomorrow? … No? No problem at all. Here's what I'll do: I'll send you the recording of that Dallas investor, and I'll check in Thursday. Sound good?
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>One strong ask for today. If no, transition to a scheduled follow-up.</li>
+        <li>Never end on "let me know" — sell the specific next step.</li>
+        <li>"Not yet" / "I need to think" is where the sale <em>starts</em> — but sometimes it starts on the follow-up.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 7 -->
+<section class="part" id="part7">
+  <div class="part-head">
+    <div class="part-num">PART 07</div>
+    <h2>The Objection Library</h2>
+    <p class="part-intro">The reference section you jump to mid-call. First the meta-principles that govern every objection, then the six categories — each with the framework, the exact language, and the real ISTL version Yuri and Gene use. An objection is a buying signal. Treat it like one.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 7.0 meta -->
+  <article class="card t-framework" data-tags="type:framework stage:objection meta formula prevention buying-signal cardone" data-title="The objection meta-principles">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag">Foundation</span></div>
+    <h3>The Meta-Principles — How to Handle Any Objection</h3>
+    <p class="sit">You hear an objection and fire back a rehearsed line. That's reacting, not selling.</p>
+    <p><span class="lead-in">Every objection runs the same formula, and most are symptoms of something you missed earlier.</span></p>
+    <div class="rulebox">LISTEN → ACKNOWLEDGE → AGREE → ISOLATE → REFRAME → TIE TO VALUE → CLOSE</div>
+    <ul>
+      <li><span class="lead-in">Clarify first, don't react.</span> Answering instantly reads as defensive. Ask what they mean before you handle it.</li>
+      <li><span class="lead-in">Make statements, don't just ask.</span> You cannot overcome an objection by only asking questions — assert value.</li>
+      <li><span class="lead-in">Prevention beats reaction.</span> An objection is usually a broken earlier step. Hunt objections early ("see anything that concerned you?") and file them.</li>
+      <li><span class="lead-in">Isolate.</span> "Besides that, is there anything else holding you back?" Get the full list before handling any single one.</li>
+      <li><span class="lead-in">Same objection twice = change strategy.</span> They've mentally checked out; break the pattern, don't repeat the line.</li>
+      <li><span class="lead-in">An objection is a buying signal.</span> "Is that the best you can do?" means they're ready — restate value, don't discount.</li>
+    </ul>
+    <div class="quote">
+      <p>"Animals react. People think. Every objection — pause, paraphrase, re-engage. Don't fire back a rehearsed line."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="quote">
+      <p>"You cannot deal with an objection if you don't really believe this will be beneficial for the guy."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">The One Line</div>
+      <ul>
+        <li>"The platform isn't expensive — buying the wrong leads is."</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7.A PRICE -->
+  <article class="card t-play" data-tags="stage:objection price too-expensive money product-vs-solution buyer:broke cardone" data-title="Price: too expensive / no money">
+    <div class="eyebrow"><span class="tag">Objection · A</span><span class="tag buyer">Low-Budget</span></div>
+    <h3>"It's Too Expensive" / "I Don't Have the Money"</h3>
+    <p class="sit">The most common objection — and the most misread. Price is rarely the real issue.</p>
+    <p><span class="lead-in">Isolate whether they can't afford the <em>product</em> or the <em>solution</em>.</span> Then reframe against the cost of staying stuck. If they say no to a small entry too, the issue is trust, not price — use the descending commitment ladder to find out.</p>
+    <div class="say">
+      <span class="lbl">Product vs. solution (Jin's frame)</span>
+      When you say it's too much — is it that the product feels expensive, or that the solution to your lead problem feels expensive? Because not fixing this is costing you way more than the package every month.
+    </div>
+    <div class="quote">
+      <p>"You spent $60,000 to close one deal? Why didn't you change faster?"</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p><span class="lead-in">The $19 reality check</span> reframes price-to-quality without insulting: "Higher quality leads require higher investment. The $19 lead and the $200 lead aren't the same thing." And the descending ladder: offer smaller; if they decline $100 too, it was never about the money.</p>
+    <div class="takeaway">
+      <div class="th">Handling Moves</div>
+      <ul>
+        <li>Isolate product vs. solution. Reframe against cost of inaction.</li>
+        <li>Descending ladder → a "no" to $100 reveals a trust problem, not a price one.</li>
+        <li>Financing from $1,499. "$499 is the minimum entry" — never "a good start."</li>
+        <li>Sometimes "too expensive" = "not my customer." Not every objection needs overcoming.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7.B TIMING -->
+  <article class="card t-play" data-tags="stage:objection timing think-about-it not-ready later buy-now-use-later voss cardone" data-title="Timing: think about it / not ready">
+    <div class="eyebrow"><span class="tag">Objection · B</span><span class="tag">Timing</span></div>
+    <h3>"I Need to Think About It" / "I'm Not Ready Yet"</h3>
+    <p class="sit">The polite exit. ~90% who say "next week" never move. Handle it now.</p>
+    <p><span class="lead-in">Diagnose the fear beneath the stall, then neutralize timing with "buy now, use later."</span> "I need to think" usually means "I don't trust the product" or "I don't trust myself" — label it and find out which.</p>
+    <div class="say">
+      <span class="lbl">Voss label + no-oriented question</span>
+      It sounds like you want to be sure you can fully commit before spending money. Would it be a terrible idea to lock in the bonus pricing today and just let it sit on your account until you're ready?
+    </div>
+    <div class="say">
+      <span class="lbl">Buy now, use later</span>
+      You can purchase today and it sits on your balance — it won't burn, it's not going anywhere. But the bonus is only available today.
+    </div>
+    <p>For the "not ready" newbie, don't sell leads — sell the ecosystem (coaching, community, role-play bot). And isolate the timing: "Other than the timing, is there anything else holding you back?"</p>
+    <div class="takeaway">
+      <div class="th">Handling Moves</div>
+      <ul>
+        <li>Handle it now — "next week" is almost never real. Ask "any way to make it work <em>this</em> week?"</li>
+        <li>Label the fear (product vs. self), then buy-now-use-later to remove timing.</li>
+        <li>"Not ready" → pitch ecosystem, not leads. Offer the no-commitment demo/soft agreement.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7.C AUTHORITY -->
+  <article class="card t-play" data-tags="stage:objection authority spouse partner talk-to-users comparison references cardone sandler" data-title="Authority: spouse / talk to other users">
+    <div class="eyebrow"><span class="tag">Objection · C</span><span class="tag">Authority</span></div>
+    <h3>"I Need to Talk to My Partner" / "I Want to Talk to Other Users First"</h3>
+    <p class="sit">Both are usually trust in disguise — and ~90% who ask for references never call them.</p>
+    <p><span class="lead-in">Separate permission from validation.</span> "Talk to my spouse" — are you asking for permission or for support? "Talk to other users" — that's a trust gap that started earlier in the call, not an information request. Diagnose it, don't send a reference list.</p>
+    <div class="quote">
+      <p>"When people say they want to talk to other users, it usually means something I shared — or didn't share — left them unsure. What was the most concerning thing from our conversation?"</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p><span class="lead-in">Yuri's strategic-withdraw follow-up</span> (Sandler + Klaff status play): call back and lower your status. "I actually thought about our conversation and don't think I was as helpful as I could've been." The guard drops, the real objection surfaces. Ask the partner/boss check EARLY next time — never discover the decision-maker at the close.</p>
+    <div class="takeaway">
+      <div class="th">Handling Moves</div>
+      <ul>
+        <li>Permission vs. support — ask which. "Talk to users" = trust gap, diagnose it.</li>
+        <li>Strategic withdraw: apologize, re-diagnose, offer a 3-way call with your manager.</li>
+        <li>Accusation audit on the callback: "You're probably thinking I'm just calling to sell you again."</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7.D NEED -->
+  <article class="card t-play" data-tags="stage:objection need fit do-it-myself send-proposal gap-selling cardone" data-title="Need/Fit: I can do this myself">
+    <div class="eyebrow"><span class="tag">Objection · D</span><span class="tag">Need / Fit</span></div>
+    <h3>"I Can Do This Myself" / "Just Send Me a Proposal"</h3>
+    <p class="sit">Both dodge the decision. Quantify the gap before they leave the call.</p>
+    <p><span class="lead-in">"I can do this myself" = smart enough to, but at what cost in time?</span> Reframe: two years learning to generate leads vs. results next month. "Just send me a proposal" = an objection wearing a request's clothes — address it now, not on a next call that won't happen.</p>
+    <div class="say">
+      <span class="lbl">DIY reframe</span>
+      You're clearly capable of building this yourself. The real question is time — do you want to spend the next two years learning lead gen, or start closing deals next month while we handle the lead side?
+    </div>
+    <div class="say">
+      <span class="lbl">"Send me a proposal"</span>
+      Happy to — but proposals are just words on a page. What specifically would need to be in it for you to say yes? Let's solve that right now while we're both here.
+    </div>
+    <div class="takeaway">
+      <div class="th">Handling Moves</div>
+      <ul>
+        <li>DIY → reframe to time-cost and opportunity cost, not capability.</li>
+        <li>"Send a proposal" → surface and handle the real objection on this call.</li>
+        <li>Gap Selling: if you didn't find the gap, you can't close it. Quantify current vs. desired state.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7.E TRUST -->
+  <article class="card t-play" data-tags="stage:objection trust credibility bad-reviews burned scam skeptical belfort voss" data-title="Trust: bad reviews / been burned">
+    <div class="eyebrow"><span class="tag">Objection · E</span><span class="tag">Trust</span></div>
+    <h3>"I've Heard Bad Reviews" / "I Got Burned by a Lead Company Before"</h3>
+    <p class="sit">The objection beneath the objection is fear of being burned again. Answer the emotion before the logic.</p>
+    <p><span class="lead-in">Don't deny — contextualize, and diagnose the real fear.</span> Label it (Voss), make them do the math on bad reviews, and use the bucket technique to find whether they fear wasting money or fear the process.</p>
+    <div class="say">
+      <span class="lbl">Label first (Belfort: the objection beneath)</span>
+      It sounds like you've been burned before by a platform that overpromised, and you don't want to repeat that. Help me understand — what specifically happened last time?
+    </div>
+    <div class="quote">
+      <p>"20 bad reviews out of 5,000 investors who closed. Do the math — the system works. But tell me what you saw, because I want to address the real concern."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>When they blame the last vendor's leads, gently put process back on the table — "the leads usually aren't the issue, conversion is; what did your follow-up look like?" — without over-promising (over-inflated expectations lead to faster refunds). Then land the profile-matched proof: it hits 10x harder because it answers a fear they just named.</p>
+    <div class="takeaway">
+      <div class="th">Handling Moves</div>
+      <ul>
+        <li>Label the fear, ask "what happened last time," THEN present proof.</li>
+        <li>Contextualize bad reviews with the ratio — don't deny them.</li>
+        <li>Don't over-promise; put some responsibility on process. Address, don't inflate.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7.F COMPETITION -->
+  <article class="card t-play" data-tags="stage:objection competition competitor propertyleads comparison adjustability moat" data-title="Competition: another provider is cheaper">
+    <div class="eyebrow"><span class="tag">Objection · F</span><span class="tag">Competition</span></div>
+    <h3>"Another Provider Is Cheaper" / "I Already Use PropertyLeads"</h3>
+    <p class="sit">Don't trash the competitor. Lean in, find what they dislike, and own the moat.</p>
+    <p><span class="lead-in">Ask what they've considered, met, liked, and disliked — then never pitch a feature they liked elsewhere that you can't match.</span> Lead quality is similar everywhere; the moat is transparency + the ability to <em>adjust</em>.</p>
+    <div class="quote">
+      <p>"I don't care what they like about the competitor. I want to know what they don't like."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="say">
+      <span class="lbl">The adjustability moat</span>
+      Lead quality is roughly the same everywhere. The difference is you can filter by motivation, square footage, ownership length — and if it's not working, we adjust it with you. With them, you spend and hope. If it doesn't work, then what?
+    </div>
+    <p>Position list tools honestly: DealMachine / PropStream / PropWire sell <em>prospect lists</em>, not motivated leads. "Lists = you pay with time. Motivated leads = you pay with money." Stay evenhanded — trust comes from being fair, not from bashing.</p>
+    <div class="takeaway">
+      <div class="th">Handling Moves</div>
+      <ul>
+        <li>Lean into competitor mentions: considered / met / liked / disliked.</li>
+        <li>Adjustability + transparency is the moat. "You spend and hope" is the contrast.</li>
+        <li>Never bash. Evenhandedness builds the trust that closes.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7.G do I have to pay -->
+  <article class="card t-play" data-tags="stage:objection pay upfront free do-i-have-to-pay ecosystem yuri" data-title="Do I have to pay upfront?">
+    <div class="eyebrow"><span class="tag">Objection · G</span><span class="tag buyer">Newbie</span></div>
+    <h3>"Do I Have to Pay Upfront?"</h3>
+    <p class="sit">Lucas lost a prospect by confirming payment. The answer is always no — keep them in the ecosystem.</p>
+    <p><span class="lead-in">Never confirm they have to pay upfront. Never flinch.</span> There's always a free path in: spin the wheel daily, join webinars, get free bonus balance. Redirect to showing them how.</p>
+    <div class="quote">
+      <p>"You don't have to pay anything. Want me to show you how to do it? Spin the wheel, join the webinar, get free balance."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>Then land a proof point of a free-path win — Zach's spin-the-wheel free balance turning into an $11K closed deal. Nobody leaves that call when you frame it this way.</p>
+    <div class="takeaway">
+      <div class="th">Handling Moves</div>
+      <ul>
+        <li>Answer is always "no, let me show you how." Keep them in the ecosystem.</li>
+        <li>Free paths: wheel, webinars, bonus balance.</li>
+        <li>Close with a free-path success story (Zach → $11K).</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 8 -->
+<section class="part" id="part8">
+  <div class="part-head">
+    <div class="part-num">PART 08</div>
+    <h2>Follow-Up &amp; No-Shows</h2>
+    <p class="part-intro">Up to 90% of revenue lives in the follow-up. The average deal closes after 6–8 touches — yet most reps quit after one. This is the unglamorous engine room where consistent money is actually made.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 8.1 -->
+  <article class="card t-play" data-tags="stage:followup 90-percent touches discipline block pipeline" data-title="Follow-up is where the money is">
+    <div class="eyebrow"><span class="tag stage">Follow-Up</span><span class="tag">Discipline</span></div>
+    <h3>Follow-Up Is Where the Money Is — Treat It Like a Product</h3>
+    <p class="sit">You send one "just checking in" text and give up when they don't reply.</p>
+    <p><span class="lead-in">Up to 90% of revenue comes from follow-ups, and the average close takes 6–8 touches.</span> That means the deal you "lost" on the demo is usually still alive. Block a fixed hour every day for follow-ups — same time, non-negotiable — and never end a call with a vague "let me know." Sell the next step like it's part of the product.</p>
+    <div class="quote">
+      <p>"It's boom — it's one hour on follow-ups. Not maybe follow-up. Everything else works around the block, not the other way around."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>The standard the top reps actually hit is 10–20 tracked touches per deal. If you're not tracking follow-ups in Zoho, you're flying blind — pull calls + tasks per deal and know your number.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>6–8 touches to close on average; 10–20 is the top-rep standard.</li>
+        <li>Fixed daily follow-up block — same hour, protected.</li>
+        <li>Always send proposals: 5 texts + 5 emails. Email rarely closes; the phone does.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 8.2 -->
+  <article class="card t-framework" data-tags="type:framework stage:followup script structure break-ice credibility re-anchor yuri" data-title="The follow-up script structure">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag stage">Follow-Up</span></div>
+    <h3>The Follow-Up Script Structure — Re-Deliver Value, Don't Chase</h3>
+    <p class="sit">"Hey, the promo expires today!" — they don't remember the value, so the urgency means nothing.</p>
+    <p><span class="lead-in">Every follow-up rebuilds value before it asks for anything.</span> Run the sequence in order:</p>
+    <ol>
+      <li><span class="lead-in">Break the ice</span> — "How did the call go? Was everything clear?" Let them talk first.</li>
+      <li><span class="lead-in">Drop credibility</span> — "Did they mention we signed 400+ contracts last week?" A hook, not a closer.</li>
+      <li><span class="lead-in">Re-anchor the package</span> — get them to say yes to the value again before money.</li>
+      <li><span class="lead-in">Surface objections</span> — find the real blocker before piling on incentives.</li>
+      <li><span class="lead-in">Only then, extras</span> — bonus balance, coupons, urgency come last.</li>
+    </ol>
+    <div class="quote">
+      <p>"If you call and just say the promo is expiring, they don't remember the value. You lost before you started."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Value first, incentive last. Never open with "the promo's ending."</li>
+        <li>Every touch needs a reason to exist — a clip, an interview, an update.</li>
+        <li>Conversations over CTAs: create a reason to reply.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 8.3 -->
+  <article class="card t-framework" data-tags="type:framework stage:followup existing-client three-step content value-hook apr20 yuri" data-title="The 3-step existing-client sequence">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag">Existing Clients</span></div>
+    <h3>The 3-Step Existing-Client Sequence</h3>
+    <p class="sit">You cold-call an existing client with "how's it going" and it turns into a complaint session.</p>
+    <p><span class="lead-in">Plant value before you ever ask for anything.</span> Never open with "how are the leads going" (you'll get a complaint) or "you're low on balance" (screams sales call).</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">Step 1 · Send something useful</div><div class="fd">A specific training clip or interview matched to where they are. "FYI — we recorded a guy who closed $150K in three months in your market. Here's the link — let me know what you think."</div></div>
+      <div class="fcell"><div class="ft">Step 2 · Follow up on it</div><div class="fd">"Did you get a chance to watch that?" A warm, natural reason to call. The seed is planted.</div></div>
+      <div class="fcell"><div class="ft">Step 3 · Now make your move</div><div class="fd">Once they're in a positive frame: "We have a promotion for existing clients this week — same package, but I can add X. Want me to set it up?"</div></div>
+    </div>
+    <div class="quote">
+      <p>"If someone calls and says 'I just want to check in on you' — that's a bank call. Nobody books a call with their bank to chat. Every call needs a specific reason."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Content → follow-up → offer. Never lead with the ask.</li>
+        <li>Say "recording / interview / training," never "testimonial."</li>
+        <li>Low-balance call: start positive ("send any offers yet?"), never "why didn't you call them."</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 8.4 -->
+  <article class="card t-framework" data-tags="type:framework stage:followup no-show 5-touch sequence reschedule confirmation" data-title="The 5-touch no-show sequence">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag">No-Shows</span></div>
+    <h3>The 5-Touch No-Show Sequence</h3>
+    <p class="sit">A demo no-shows and you mark it dead. It was warmer than any cold lead you'll dial today.</p>
+    <p><span class="lead-in">No-shows already raised their hand once. Work them on a schedule, not a whim.</span></p>
+    <ol>
+      <li><span class="lead-in">T + 1 hour</span> — reschedule attempt while intent is warm.</li>
+      <li><span class="lead-in">T + 1 day</span> — value hook (send a relevant clip, not "you missed our call").</li>
+      <li><span class="lead-in">T + 3 days</span> — county-specific social proof.</li>
+      <li><span class="lead-in">T + 7 days</span> — soft offer.</li>
+      <li><span class="lead-in">T + 14 days</span> — nurture / long-term.</li>
+    </ol>
+    <p>Prevent them upstream with a confirmation sequence: text 24h before, call 2h before, and get a hard verbal yes at the moment of booking. Keep booking windows to 5–7 days — long windows breed no-shows. The calendar-invite title matters too: "$50 bonus" showed 59% vs. 39% for "strategy session."</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Chase no-shows personally, on a 5-touch schedule — never generically.</li>
+        <li>Confirm 24h + 2h + hard verbal yes at booking. Short windows.</li>
+        <li>Monday no-shows come from Thu/Fri bookings — cover weekends.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 8.5 -->
+  <article class="card t-play" data-tags="stage:followup save-number account-manager gpt-short confirmation apr17 apr20" data-title="Get them to save your number">
+    <div class="eyebrow"><span class="tag stage">Follow-Up</span><span class="tag">Relationship</span></div>
+    <h3>Get Them to Save Your Number — and Keep Every Text Short</h3>
+    <p class="sit">Clients don't answer because they don't know who's calling. On webinars, most can't name their account manager.</p>
+    <p><span class="lead-in">If a client hasn't saved your number, the relationship doesn't really exist.</span> Make it part of onboarding: "Write down my number — I'm your account manager. I'll send you exclusive coupons, free coaching invites, and early access through this number. You don't want to miss those."</p>
+    <div class="quote">
+      <p>"Tell your GPT explicitly: no fluff, no sophisticated words, short sentences. One sentence on what's in the video and why it's relevant beats three sentences of filler."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <p>Build a GPT chat per client: save their context and generate the personalized pre-call text (Anna's system — flagged by Yuri as best on the team). And on confirmation calls, always drop the contracts-signed number.</p>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Make saving your number a standard onboarding step, with a concrete reason.</li>
+        <li>GPT texts: short, plain, one specific reason to engage. If it sounds like an ad, rewrite it.</li>
+        <li>Watch the material yourself so you can reference "the part at the 12-minute mark."</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 9 -->
+<section class="part" id="part9">
+  <div class="part-head">
+    <div class="part-num">PART 09</div>
+    <h2>Retention, CSM &amp; Winback</h2>
+    <p class="part-intro">Churn is now a comp metric — retention is money in your pocket, not a nice-to-have. Existing clients are the fastest revenue on the board, and lapsed subscribers are the highest-ROI list you'll ever dial.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- 9.1 -->
+  <article class="card t-play" data-tags="stage:retention csm goals save upsell demo existing-fastest" data-title="Existing clients are the fastest money">
+    <div class="eyebrow"><span class="tag stage">Retention</span><span class="tag">CSM</span></div>
+    <h3>Existing Clients Are the Fastest Money on the Board</h3>
+    <p class="sit">You chase cold leads all day while your own book of buyers sits untouched.</p>
+    <p><span class="lead-in">They already gave you money and the relationship exists. When a promo runs, they should be your first call of the day.</span> The CSM call has three goals in order: save the account, upsell, book the next demo. Don't try to take more money from someone who hasn't closed yet — give them something extra first, then close.</p>
+    <div class="quote">
+      <p>"Every call to an existing client needs a specific value hook. Not a check-in. A coupon, a webinar, a new product, a free session. Lead with something concrete."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>CSM order: save → upsell → book demo.</li>
+        <li>Promo day = existing clients first; they can buy immediately.</li>
+        <li>Push FPM / Coupon Club right after close — a package alone isn't "active."</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 9.2 -->
+  <article class="card t-play" data-tags="stage:retention churn multiplier retention 90-days fpm check-in" data-title="Retention is a comp metric now">
+    <div class="eyebrow"><span class="tag stage">Retention</span><span class="tag">Comp</span></div>
+    <h3>Retention Is a Comp Metric — Own Your Book</h3>
+    <p class="sit">You close a client and move on. Then they churn and it hits your commission.</p>
+    <p><span class="lead-in">A churn multiplier means retaining clients directly affects what you earn.</span> The last rep to sell a client owns retention for ~90 days. Around 40% of churn is voluntary and addressable — 60% of cancellations are card declines, not intent to leave, so fight for those. Schedule mandatory FPM check-ins from activation: it stops the constant pinging, catches bad parameter setups before they become refunds, and creates a natural upsell moment.</p>
+    <div class="quote">
+      <p>"Bumping from $150 to $200 would get you 3–4 leads a week instead of 1–2."</p>
+      <p class="by">Yuri Saiko</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>You own retention for 90 days after the sale. Retaining = earning.</li>
+        <li>Card-decline churn is winnable — chase it, don't write it off.</li>
+        <li>Mandatory FPM check-ins prevent refunds and open upsells.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 9.3 -->
+  <article class="card t-play" data-tags="stage:retention winback lapsed reactivation empty-balance ron" data-title="Winback is the highest-ROI list">
+    <div class="eyebrow"><span class="tag stage">Retention</span><span class="tag">Winback</span></div>
+    <h3>Winback — The Highest-ROI List You'll Ever Dial</h3>
+    <p class="sit">You ignore cancelled and empty-balance clients. They're the easiest yeses left.</p>
+    <p><span class="lead-in">Lapsed subscribers already bought, already believed, and just drifted.</span> The ego cost of re-entry is near zero. Ron's dead-simple play closed two on the spot: "Looks like your balance is empty — want more leads?" No pitch, no objection, just timing. Reframe ISTL as a marketing channel: good marketers keep spending and adjust; they don't quit after one imperfect month.</p>
+    <div class="quote">
+      <p>"Looks like your balance is empty, want more leads?"</p>
+      <p class="by">Ron Horchak</p>
+    </div>
+    <div class="takeaway">
+      <div class="th">Key Takeaways</div>
+      <ul>
+        <li>Winback is the highest-ROI activity in any subscription business — make it a daily list.</li>
+        <li>Empty-balance Coupon Club member = a package pitch (they have buying power).</li>
+        <li>Reframe as a marketing channel to reset "it didn't work" thinking.</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ PART 10 -->
+<section class="part" id="part10">
+  <div class="part-head">
+    <div class="part-num">PART 10</div>
+    <h2>The Framework Vault</h2>
+    <p class="part-intro">One-line references to the named systems behind the plays. When you want the theory under a move, it's here — the world-class frameworks Yuri and Gene map their coaching onto.</p>
+    <hr class="part-rule">
+  </div>
+
+  <article class="card t-framework" data-tags="type:framework vault cardone voss spin challenger sandler gap klaff cialdini disc antonio" data-title="The framework vault reference">
+    <div class="eyebrow"><span class="tag">Framework</span><span class="tag">Reference</span></div>
+    <h3>The Framework Vault</h3>
+    <p class="sit">The named systems behind everything in this manual — use it when.</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">Cardone — Trial Closing &amp; 10X</div><div class="fd">6 objection frameworks, 14 rules, the 10 trial closes. Use throughout the demo to take temperature and catch objections early.</div></div>
+      <div class="fcell"><div class="ft">Voss — Never Split the Difference</div><div class="fd">Labeling ("it sounds like…"), no-oriented questions, accusation audit, tactical empathy. Objection handling &amp; trust.</div></div>
+      <div class="fcell"><div class="ft">Rackham — SPIN</div><div class="fd">Situation → Problem → Implication → Need-Payoff. Cut Situation questions; live in Implication. Discovery.</div></div>
+      <div class="fcell"><div class="ft">Dixon/Adamson — Challenger</div><div class="fd">Teach, tailor, take control. For experienced prospects who think they know everything.</div></div>
+      <div class="fcell"><div class="ft">Sandler</div><div class="fd">Pain funnel, reversing, strategic withdraw, "the person who cares less wins," "no objection is the worst objection." Re-engagement.</div></div>
+      <div class="fcell"><div class="ft">Keenan — Gap Selling</div><div class="fd">Quantify the gap between current and desired state. For "I'm fine" / "I'll think about it."</div></div>
+      <div class="fcell"><div class="ft">Klaff — Pitch Anything</div><div class="fd">Control status dynamics; lower your status to raise it. Follow-ups &amp; the strategic withdraw.</div></div>
+      <div class="fcell"><div class="ft">Cialdini — Influence</div><div class="fd">Social proof is strongest from someone similar. Peer stories beat guru endorsements.</div></div>
+      <div class="fcell"><div class="ft">DISC</div><div class="fd">D/I/S/C profiles — change delivery, not offer. D/C want math; I/S want story &amp; safety.</div></div>
+      <div class="fcell"><div class="ft">Victor Antonio — 7 Trusts</div><div class="fd">Industry, product, market knowledge · honest · direct · evenhanded · listen. People buy from those they trust.</div></div>
+      <div class="fcell"><div class="ft">Yuri's Problem-Framing</div><div class="fd">Downside → client problem → root cause → other solutions → ISTL answer. Socratic self-diagnosis before pitching an idea.</div></div>
+      <div class="fcell"><div class="ft">Ericsson — Deliberate Practice</div><div class="fd">Isolate one skill, drill it, get feedback, apply live. Transcript review = game film.</div></div>
+    </div>
+  </article>
+</section>
+
+<!-- ============================================================ APPENDICES -->
+<section class="part" id="appendix">
+  <div class="part-head">
+    <div class="part-num">APPENDIX</div>
+    <h2>The Vault — Proof, Pricing &amp; Quotes</h2>
+    <p class="part-intro">The ammunition. Profile-matched testimonials, proof anchors, the pricing ladder, and the verbatim quote bank — everything you reach for mid-call.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- A. Testimonial roster -->
+  <article class="card t-play" data-tags="appendix testimonial roster proof profile-match names" data-title="Testimonial roster">
+    <div class="eyebrow"><span class="tag">Appendix A</span><span class="tag">Proof</span></div>
+    <h3>Testimonial Roster — Pick the One Where They Think "That's Me"</h3>
+    <p class="sit">Per demo, pick a single profile-matched story and know it cold. Lead with the match, not the dollar figure.</p>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">Jonathan Collins — Tampa</div><div class="fd">Coupon Club; $40K from a $29 lead; ~$65K across 6 deals.</div></div>
+      <div class="fcell"><div class="ft">Evan Rocha — NorCal</div><div class="fd">Contract off his 3rd lead ($15K); avg fee ~$27K; $36K from a $49 lead.</div></div>
+      <div class="fcell"><div class="ft">Brian Pierre — VA (virtual)</div><div class="fd">Multi-state virtual; 1 lead → 11 deals. Exclusive + sale proof.</div></div>
+      <div class="fcell"><div class="ft">John Looney — Dallas</div><div class="fd">23 deals in 5 months; $231K profit on one flip.</div></div>
+      <div class="fcell"><div class="ft">Danielle Ellsworth — Phoenix</div><div class="fd">Titanium; ~$70K in ~6 months.</div></div>
+      <div class="fcell"><div class="ft">Zach Carr — Detroit</div><div class="fd">Wheel-spin free balance → $11.5K closed; licensed at 18.</div></div>
+      <div class="fcell"><div class="ft">Krystin — OK</div><div class="fd">Auto Match top-tier; ideal "smart starter" profile.</div></div>
+      <div class="fcell"><div class="ft">Corey Devol — OH</div><div class="fd">Won't do mailers; exclusive-lead convert.</div></div>
+      <div class="fcell"><div class="ft">Tim Lumbao</div><div class="fd">"Quit the job, has an accent, cold-calling failed" — relatable underdog.</div></div>
+      <div class="fcell"><div class="ft">Daniel Sousa</div><div class="fd">$70K deal through a family tragedy — kills the "too busy" objection.</div></div>
+      <div class="fcell"><div class="ft">Doug</div><div class="fd">$28K closed — quick social-proof drop.</div></div>
+      <div class="fcell"><div class="ft">Coaches to name-drop</div><div class="fd">RJ Bates, Jerry Norton, Don (novations), Rich Wonders, Ashley. Only with people who know them.</div></div>
+    </div>
+    <div class="takeaway">
+      <div class="th">Rules</div>
+      <ul>
+        <li>Never quote numbers that undercut the story. Lead with profile, not dollars.</li>
+        <li>Frame as "recording / interview," never "testimonial."</li>
+        <li>Community name-drops only land with people who already know them.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- B. proof anchors + pricing -->
+  <article class="card t-play" data-tags="appendix proof-anchors pricing package ladder market floors numbers" data-title="Proof anchors and pricing ladder">
+    <div class="eyebrow"><span class="tag">Appendix B</span><span class="tag">Numbers</span></div>
+    <h3>Proof Anchors &amp; the Pricing Ladder</h3>
+    <p class="sit">Know these cold — they're on the platform, in front of the client.</p>
+    <div class="sub">Headline proof anchors</div>
+    <ul>
+      <li><span class="lead-in">12,716</span> contracts signed in 2025 (know the current + weekly number too).</li>
+      <li><span class="lead-in">5,000+</span> investors have closed at least one deal (~0.4% complaint rate framing).</li>
+      <li><span class="lead-in">Leads from $29</span> · Evan Rocha $36K from a $49 lead · Brian Pierre 1 lead → 11 deals.</li>
+    </ul>
+    <div class="sub">The pricing ladder</div>
+    <div class="fgrid">
+      <div class="fcell"><div class="ft">$10,000</div><div class="fd">Established operators. Sweeteners case-by-case.</div></div>
+      <div class="fcell"><div class="ft">$5,000 — anchor</div><div class="fd">Primary target for most clients. ~4:1 value ratio.</div></div>
+      <div class="fcell"><div class="ft">$1,000</div><div class="fd">Lower budget. Keep the pitch simple; don't over-explain.</div></div>
+      <div class="fcell"><div class="ft">$499 — last resort</div><div class="fd">Sub-$1K only. The minimum entry point, never "a good start."</div></div>
+      <div class="fcell"><div class="ft">Coupon Club</div><div class="fd">$199/mo · $499/qtr · $999/yr. ~33 leads included.</div></div>
+      <div class="fcell"><div class="ft">Financing</div><div class="fd">From $1,499 — AfterPay, Affirm, Klarna.</div></div>
+    </div>
+    <div class="sub">Market floors</div>
+    <ul>
+      <li>CA / San Diego / Miami / Boston / Fresno: $200 floor, $275–375+ typical. $100 = zero leads.</li>
+      <li>Indiana &amp; comparable: $100 possible, $150–225 recommended.</li>
+      <li>Universal: match their PropertyLeads spend, start there.</li>
+    </ul>
+  </article>
+
+  <!-- C. quote bank -->
+  <article class="card t-framework" data-tags="appendix quote-bank verbatim yuri gene tj gold" data-title="The verbatim quote bank">
+    <div class="eyebrow"><span class="tag">Appendix C</span><span class="tag">Quote Bank</span></div>
+    <h3>The Verbatim Quote Bank</h3>
+    <p class="sit">The lines worth memorizing — in the coaches' own words.</p>
+    <div class="quote"><p>"Presentation is not sales. Sales starts after the first 'no.'"</p><p class="by">Gene Blinkov</p></div>
+    <div class="quote"><p>"If you didn't get to 'man, that's too much,' you didn't even sell. Your title can be Senior Demo Presenter."</p><p class="by">Gene Blinkov</p></div>
+    <div class="quote"><p>"$500 is nothing. We spend $500 a minute over here. Stop sounding like you're apologizing."</p><p class="by">Gene Blinkov</p></div>
+    <div class="quote"><p>"Can we push that up a little? Nobody asks that question. It got Chris Rude so much money."</p><p class="by">Gene Blinkov</p></div>
+    <div class="quote"><p>"This is not a lead source. We change people's lives."</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"The gazelle doesn't need to outrun the lion. She needs to outrun the slowest gazelle."</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"Animals react. People think."</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"If you're not certain, is the client going to be certain?"</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"The platform isn't expensive — buying the wrong leads is."</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"You spent $60,000 to close one deal? Why didn't you change faster?"</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"Loaded investors don't lose this way."</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"You guys better start being good quicker or we'll be replacing people."</p><p class="by">Yuri Saiko</p></div>
+    <div class="quote"><p>"Best case you close deals. Worst case you build momentum, get coaching, support. If both beat where you are now — what are we waiting for?"</p><p class="by">TJ Serafini</p></div>
+    <div class="rulebox">You need to hear a NO. If you didn't get to a NO, you didn't sell — you presented.</div>
+  </article>
+</section>
+
+
+
+<!-- ============================================================ PART 11 · KNOWLEDGE CHECK -->
+<section class="part" id="part11">
+  <div class="part-head">
+    <div class="part-num">PART 11</div>
+    <h2>Knowledge Check</h2>
+    <p class="part-intro">You've read the manual. Now find out what actually stuck. One combined test across all 11 chapters — no notes, answer honestly. It scores you on screen, shows which chapters to go back to, and saves nothing.</p>
+    <hr class="part-rule">
+  </div>
+
+  <!-- gate -->
+  <div class="qz-intro-card" id="qzGate">
+    <h3>Before you start</h3>
+    <p>Enter your name and email to begin. This just labels your result on screen — nothing is saved, stored, or sent anywhere.</p>
+    <div class="qz-field" id="qzFName">
+      <label for="qzName">Full name</label>
+      <input type="text" id="qzName" autocomplete="name" placeholder="e.g. Will Marchison">
+      <div class="qz-err">Please enter your full name (first and last).</div>
+    </div>
+    <div class="qz-field" id="qzFEmail">
+      <label for="qzEmail">Email</label>
+      <input type="email" id="qzEmail" autocomplete="email" placeholder="you@ispeedtolead.com">
+      <div class="qz-err">Please enter a valid email address.</div>
+    </div>
+    <div class="qz-privacy">🔒 Your name and email stay in this browser tab only. This test does not save, store, or transmit anything — close the tab and it's gone.</div>
+    <button class="qz-btn red" id="qzStart">Start the test →</button>
+  </div>
+
+  <!-- running bar -->
+  <div class="qz-bar qz-hidden" id="qzBar">
+    <div class="who">Test-taker: <b id="qzWho">—</b></div>
+    <div class="prog"><span id="qzAnswered">0</span> / <span id="qzTotal">0</span> answered</div>
+  </div>
+
+  <div id="qzBody" class="qz-hidden"></div>
+
+  <div class="qz-submitrow qz-hidden" id="qzSubmitRow">
+    <button class="qz-btn red" id="qzSubmit">Submit &amp; see my score</button>
+    <button class="qz-btn ghost" id="qzClear">Clear answers</button>
+  </div>
+
+  <div id="qzResults" class="qz-hidden"></div>
+</section>
+
+  <div class="noresults" id="noresults">No plays match that search. Try a broader term or clear your filters.</div>
+</div>
+</div>
+<button class="backtop" id="backtop" aria-label="Back to top">↑</button>
+
+<script>
+(function(){
+  var rail=document.getElementById('rail');
+  var menuBtn=document.getElementById('menuBtn');
+  if(menuBtn){menuBtn.addEventListener('click',function(e){e.stopPropagation();rail.classList.toggle('open');});}
+  document.addEventListener('click',function(e){
+    if(rail.classList.contains('open') && !rail.contains(e.target) && e.target!==menuBtn){rail.classList.remove('open');}
+  });
+
+  var search=document.getElementById('search');
+  var countEl=document.getElementById('count');
+  var noresults=document.getElementById('noresults');
+  var cards=Array.prototype.slice.call(document.querySelectorAll('.card'));
+  var chips=Array.prototype.slice.call(document.querySelectorAll('.chip'));
+  var clearBtn=document.getElementById('clearFilters');
+  var activeFilters=[];
+
+  function cardText(c){
+    return ((c.getAttribute('data-title')||'')+' '+(c.getAttribute('data-tags')||'')+' '+c.textContent).toLowerCase();
+  }
+  function cardTags(c){return (c.getAttribute('data-tags')||'').toLowerCase();}
+
+  function apply(){
+    var q=(search.value||'').trim().toLowerCase();
+    var shown=0;
+    cards.forEach(function(c){
+      var okText = !q || cardText(c).indexOf(q)>-1;
+      var tags=cardTags(c);
+      var okFilters = activeFilters.every(function(f){return tags.indexOf(f)>-1;});
+      var vis = okText && okFilters;
+      c.style.display = vis?'':'none';
+      if(vis) shown++;
+    });
+    // hide empty parts
+    document.querySelectorAll('.part').forEach(function(sec){
+      var any=sec.querySelectorAll('.card');
+      var visible=Array.prototype.some.call(any,function(c){return c.style.display!=='none';});
+      var head=sec.querySelector('.part-head');
+      if(any.length){ sec.style.display = visible?'':'none'; }
+    });
+    if(q||activeFilters.length){ countEl.textContent = shown+' result'+(shown===1?'':'s'); }
+    else { countEl.textContent=''; }
+    noresults.style.display = shown===0 ? 'block':'none';
+  }
+
+  search.addEventListener('input',apply);
+
+  chips.forEach(function(chip){
+    chip.addEventListener('click',function(){
+      var f=chip.getAttribute('data-filter').toLowerCase();
+      var i=activeFilters.indexOf(f);
+      if(i>-1){activeFilters.splice(i,1);chip.classList.remove('on');}
+      else{activeFilters.push(f);chip.classList.add('on');}
+      apply();
+    });
+  });
+  clearBtn.addEventListener('click',function(){
+    activeFilters=[];chips.forEach(function(c){c.classList.remove('on');});
+    search.value='';apply();
+  });
+
+  // active nav on scroll
+  var navlinks=Array.prototype.slice.call(document.querySelectorAll('.rail a.navlink[href^="#"]'));
+  var sections=navlinks.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  function onScroll(){
+    var y=window.scrollY+120;
+    var cur=null;
+    sections.forEach(function(s){ if(s.offsetTop<=y) cur=s; });
+    navlinks.forEach(function(a){
+      a.classList.toggle('active', cur && a.getAttribute('href')==='#'+cur.id);
+    });
+    // progress bar
+    var h=document.documentElement;
+    var scrolled=(h.scrollTop||document.body.scrollTop);
+    var height=h.scrollHeight-h.clientHeight;
+    document.getElementById('progress').style.width=(height>0?(scrolled/height*100):0)+'%';
+    // back to top
+    var bt=document.getElementById('backtop');
+    bt.classList.toggle('show', scrolled>600);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  document.getElementById('backtop').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  // close mobile rail on nav click
+  navlinks.forEach(function(a){a.addEventListener('click',function(){rail.classList.remove('open');});});
+})();
+</script>
+
+
+<script>
+/* ===== Knowledge Check data ===== */
+// Question bank — grouped by chapter. Types: mc (multiple choice), tf (true/false), fill (key line)
+// Each: {t:type, q:question, opts:[...], a:index or bool, accept:[strings for fill], why:explanation}
+window.QUIZ = [
+{
+  ch:"00 · The Operating System",
+  qs:[
+    {t:"mc", q:"According to Yuri, what is the real purpose of a script?", opts:["To sound polished and professional","To remove emotion from selling so you perform the same on your worst day","To make new hires sound experienced","To shorten the length of calls"], a:1, why:"A script removes emotion so mood, stress, or a bad day never move your numbers."},
+    {t:"fill", q:"Complete Gene's law: \"Presentation is not sales. Sales starts after the first ____.\"", accept:["no","'no'","\"no\""], why:"Sales starts after the first no — getting to the point of tension is the minimum bar for having actually sold."},
+    {t:"tf", q:"With an inexperienced (newbie) buyer, you should dig deeper into their pain rather than build certainty.", a:false, why:"Sell certainty, not pain. The newbie's real blocker is fear of failing again — pile on pain and you create double pain."},
+    {t:"mc", q:"Yuri's 'gazelle' principle says the rep at the bottom of the board should:", opts:["Try to beat the #1 rep immediately","Compare their transcripts to the reachable reps just above them","Wait for leadership to fix the leads","Focus only on volume"], a:1, why:"Outrun the slowest gazelle — benchmark against the replicable #2/#3, not the outlier at the top."},
+    {t:"mc", q:"In 2026, what is the durable human edge over the AI SDR?", opts:["Dialing more numbers per day","Booking demos faster","Building a real relationship with someone who didn't know ISTL existed","Sending more follow-up texts"], a:2, why:"AI out-books humans. Closing and the relationships you create are what keep you employed."}
+  ]
+},
+{
+  ch:"01 · Before the Call",
+  qs:[
+    {t:"mc", q:"What is the only guaranteed high-pickup moment on the platform?", opts:["The first hour of the workday","Within 30 seconds of a user registering","Right after a webinar","During the lunch hour"], a:1, why:"The 30-second window is the single highest-leverage activity in your day."},
+    {t:"tf", q:"You should check a prospect's area code before dialing, because it tells you the market and therefore the play.", a:true, why:"Area code = market. Thin market → Auto Match; competitive → anchor on volume and buy-box control."},
+    {t:"mc", q:"How many packages should you decide to pitch before the call?", opts:["All of them, to give options","One or two, decided in advance","Zero — let the prospect choose","At least five"], a:1, why:"Decide the 1–2 packages up front. Touring the whole catalog creates objections you never needed."},
+    {t:"fill", q:"Name any ONE of the three CTA plans you set before a call (Plan A, B, or C).", accept:["register","look at the platform","platform","demo","schedule a call","book a call","one-on-one","stay in touch","follow up","follow-up","a","b","c"], why:"Plan A: register/look now. Plan B: schedule a demo. Plan C: agree to stay in touch."},
+    {t:"tf", q:"A guru endorsement (like a famous coach) is more persuasive than a peer testimonial from someone in the prospect's own market.", a:false, why:"Peer stories beat guru endorsements — prospects assume gurus are paid. Lead with the profile match."}
+  ]
+},
+{
+  ch:"02 · The Opening",
+  qs:[
+    {t:"mc", q:"Why does the word 'considering' work in the opening line?", opts:["It sounds formal","It acknowledges their intent without demanding commitment, so 'not interested' has nothing to grab","It flatters the prospect","It creates urgency"], a:1, why:"'Considering' lowers the threat and pre-frames intent, defusing the reflexive 'not interested.'"},
+    {t:"fill", q:"What is the headline proof number — contracts signed in 2025 — every rep should know cold?", accept:["12716","12,716"], why:"12,716 contracts signed in 2025 — used as an opening hook, not a closer."},
+    {t:"tf", q:"An objection at the end of a call is usually a symptom of trust you failed to build at the start.", a:true, why:"The sale is often lost 25 minutes before the objection shows up. 'Talk to other users' is a trust gap, not an info request."},
+    {t:"mc", q:"What should a call-structure frame include so the ask isn't a surprise?", opts:["Only the agenda for discovery","A promise of the lowest price","The close itself ('if it's a fit, we'll get you started today')","A list of all features"], a:2, why:"Put the close in the frame up front, plus an honest out — it pre-authorizes both discovery and the ask."}
+  ]
+},
+{
+  ch:"03 · Discovery",
+  qs:[
+    {t:"mc", q:"In the Most/Least framework, what does the 'Least' question surface?", opts:["The cheapest package they'll accept","The fear you must neutralize before they'll buy","Their least favorite competitor","The least important feature"], a:1, why:"'Most' = the outcome to amplify; 'Least' = the fear to neutralize."},
+    {t:"tf", q:"Rackham's SPIN research found that asking MORE Situation questions ('what do you do') improves close rates.", a:false, why:"Situation questions negatively correlate with closing. Live in Problem and Implication instead."},
+    {t:"mc", q:"When a prospect says 'I just saw your ad,' what should you do?", opts:["Accept it and move on","Push once more: 'has something shifted that makes this a priority now?'","Immediately pitch the package","End discovery"], a:1, why:"The first answer is a reflex; the real trigger sits one question underneath. 'Why now / what shifted.'"},
+    {t:"fill", q:"Fill in Gene's budget push line used after any number they give: \"Can we ____ that up a little?\"", accept:["push"], why:"'Can we push that up a little?' — asked every time, after every number."},
+    {t:"tf", q:"When you ask the budget question, you should offer a number first if they hesitate (e.g. 'how about $500?').", a:false, why:"Never put the number in their mouth. Anchor high, sit in the silence, then push up."},
+    {t:"mc", q:"In DISC, a 'D' (direct/data-driven) prospect wants you to lead with:", opts:["Vision and community stories","Numbers and ROI — no fluff","Reassurance and case studies","Emotional connection"], a:1, why:"D and C want math; I and S want story and safety. DISC changes delivery, not the offer."}
+  ]
+},
+{
+  ch:"04 · The Pitch",
+  qs:[
+    {t:"mc", q:"What is the demo's real job?", opts:["To fully explain every platform feature","To build trust and buy time with the prospect","To collect their payment info","To qualify them out"], a:1, why:"People forget what you show them. The demo buys trust-building time; mechanics go on the onboarding call."},
+    {t:"tf", q:"You should sell the leads (price per lead), not the program.", a:false, why:"Sell the program, not the leads. Leads are a commodity to haggle; the program is a transformation."},
+    {t:"mc", q:"The compressed demo structure Yuri and Gene landed on is:", opts:["Platform tour → pricing → close","Credibility → budget → package → close","Discovery → full feature demo → proposal","Rapport → references → platform → follow-up"], a:1, why:"Four beats: credibility → budget → package → close. Cut everything else."},
+    {t:"tf", q:"Showing a prospect the live lead volume in a thin county builds trust through transparency.", a:false, why:"More transparency isn't more trust — more expertise is. Don't hand them an objection you didn't need to create."},
+    {t:"mc", q:"'Sale Leads' on the platform actually means:", opts:["Damaged or low-quality leftover leads","Leads that went unclaimed for 24 hours — same screening, discounted, non-exclusive","Leads from a discount vendor","Expired leads past the refund window"], a:1, why:"Same AI screening and quality — the only difference is speed-to-lead (the 24h exclusivity window closed)."}
+  ]
+},
+{
+  ch:"05 · Trial Closing",
+  qs:[
+    {t:"mc", q:"How often should a trial close happen during a demo?", opts:["Once, at the very end","Never — it's pushy","2–3 times minimum, throughout","Only if the prospect asks about price"], a:2, why:"'What do you think so far?' 2–3x per call catches objections while you still have runway."},
+    {t:"fill", q:"In the Cardone Excitement Read, you ask for their excitement level on a scale of 1 to ____.", accept:["10","ten"], why:"Below 7 — ask what would make it a 10. 7+ — ask for the sale."},
+    {t:"tf", q:"The Partner/Boss check ('anyone else who'd need to be part of this?') should be asked at the close.", a:false, why:"Ask it EARLY. Discovering the real decision-maker at the close is a classic blunder."},
+    {t:"mc", q:"The Cardone 'Assumptive Forward' close sounds like:", opts:["'Do you want to move forward?'","'Once we get you set up, what zip codes would you target first?'","'Is this too expensive?'","'Should I send a proposal?'"], a:1, why:"It assumes the sale and makes them think like a customer. If they answer, they're bought in."}
+  ]
+},
+{
+  ch:"06 · The Close",
+  qs:[
+    {t:"tf", q:"After you ask for the sale, you should keep talking to reassure the prospect.", a:false, why:"After the ask — silence. Whoever speaks first loses the point."},
+    {t:"mc", q:"What number should you anchor at first?", opts:["$499","$1,000","$5,000","Whatever they say their budget is"], a:2, why:"Anchor at $5,000. You can always go down — never back up."},
+    {t:"tf", q:"You should give a sweetener (bonus balance) to help move a hesitant prospect, then ask for the close.", a:false, why:"Every sweetener needs a close condition FIRST: 'If I make it work, are you signing right now?'"},
+    {t:"mc", q:"Which is the stronger close?", opts:["'Do you want to move forward?'","'Which one do you want me to set up — monthly or annual?'","'Let me know if you're interested','No rush at all'"], a:1, why:"Close on which, not whether. Both answers are a sale — then go silent."},
+    {t:"fill", q:"Financing is available starting from what dollar amount (AfterPay/Affirm/Klarna)?", accept:["1499","$1499","1,499","$1,499"], why:"Financing from $1,499 turns 'too much' into 'which plan.'"}
+  ]
+},
+{
+  ch:"07 · The Objection Library",
+  qs:[
+    {t:"mc", q:"The objection-handling formula begins with:", opts:["Reframe","Close","Listen → Acknowledge → Agree → Isolate...","Discount"], a:2, why:"LISTEN → ACKNOWLEDGE → AGREE → ISOLATE → REFRAME → TIE TO VALUE → CLOSE."},
+    {t:"tf", q:"'No objection' is a good sign — it means the prospect is fully convinced.", a:false, why:"'No objection' is the worst objection — it means you never gave them anything real to react to, or never asked for the money."},
+    {t:"mc", q:"When a prospect says 'I need to talk to other users first,' it usually means:", opts:["They need more data","A trust gap that started earlier in the call","They're comparing prices","They want references immediately"], a:1, why:"It's a trust problem, not an info request — ~90% never actually call the references."},
+    {t:"mc", q:"For 'It's too expensive,' the key first move is to isolate whether they can't afford the:", opts:["Package vs. the financing","Product vs. the solution","Leads vs. the coaching","Monthly vs. annual"], a:1, why:"Isolate product vs. solution, then reframe against the cost of inaction."},
+    {t:"tf", q:"When a prospect cites bad reviews, you should immediately deny them and defend the platform.", a:false, why:"Don't deny — contextualize (the ratio), label the fear, ask what happened, THEN present proof."},
+    {t:"fill", q:"Complete the one-line objection reframe: \"The platform isn't expensive — buying the wrong ____ is.\"", accept:["leads","lead"], why:"'The platform isn't expensive — buying the wrong leads is.'"}
+  ]
+},
+{
+  ch:"08 · Follow-Up & No-Shows",
+  qs:[
+    {t:"mc", q:"Roughly how much of revenue comes from follow-ups?", opts:["About 20%","About 50%","Up to 90%","Almost none"], a:2, why:"Up to 90% of revenue is in the follow-up; the average deal closes after 6–8 touches."},
+    {t:"tf", q:"A good follow-up call should open with 'the promo is expiring today.'", a:false, why:"Value first, incentive last. If they don't remember the value, the urgency means nothing."},
+    {t:"mc", q:"The 3-step existing-client sequence is:", opts:["Call → pitch → close","Send useful content → follow up on it → then make your move","Email → wait → email again","Discount → urgency → close"], a:1, why:"Plant value before you ask. Never open with 'how's it going' or 'you're low on balance.'"},
+    {t:"tf", q:"You should call an existing client and open with 'I just wanted to check in on you.'", a:false, why:"That's a 'bank call' — nobody books a call with their bank to chat. Every call needs a specific reason."},
+    {t:"mc", q:"In the 5-touch no-show sequence, the first touch happens:", opts:["The next week","T + 1 hour (reschedule while intent is warm)","Never — mark it dead","After 3 days"], a:1, why:"T+1hr reschedule, T+1d value hook, T+3d social proof, T+7d soft offer, T+14d nurture."}
+  ]
+},
+{
+  ch:"09 · Retention & Winback",
+  qs:[
+    {t:"tf", q:"Retention is now tied to compensation (a churn multiplier), so retaining clients directly affects earnings.", a:true, why:"The last rep to sell owns retention ~90 days. Retaining = earning."},
+    {t:"mc", q:"Why is the winback (lapsed subscriber) list the highest-ROI list to dial?", opts:["They pay the most","They already bought, already believed, and just drifted — near-zero ego cost to return","They never have objections","They're the cheapest leads"], a:1, why:"'Balance empty, want more leads?' closed two on the spot for Ron. Make it a daily list."},
+    {t:"tf", q:"About 60% of cancellations are card declines, not an intent to leave — so they're worth fighting for.", a:true, why:"Card-decline churn is winnable. ~40% of churn is voluntary and addressable."}
+  ]
+},
+{
+  ch:"10 · The Framework Vault",
+  qs:[
+    {t:"mc", q:"Which framework uses 'labeling' and 'no-oriented questions'?", opts:["SPIN (Rackham)","Never Split the Difference (Voss)","Gap Selling (Keenan)","DISC"], a:1, why:"Voss: labeling ('it sounds like…'), no-oriented questions, accusation audit, tactical empathy."},
+    {t:"mc", q:"The Challenger Sale approach is best summarized as:", opts:["Build rapport and wait","Teach, tailor, take control","Ask only situation questions","Always discount first"], a:1, why:"Challenger: teach something new, tailor to their business, take control — for experienced prospects."},
+    {t:"fill", q:"Which framework's core idea is to 'quantify the gap between current and desired state'? (one word / author)", accept:["gap selling","gap","keenan"], why:"Gap Selling (Keenan) — if you didn't find the gap, you can't close it."}
+  ]
+}
+];
+
+/* ===== Knowledge Check logic (namespaced, independent of manual search) ===== */
+(function(){
+  var QUIZ = window.QUIZ || [];
+  var gate=document.getElementById('qzGate');
+  var body=document.getElementById('qzBody');
+  var bar=document.getElementById('qzBar');
+  var submitRow=document.getElementById('qzSubmitRow');
+  var results=document.getElementById('qzResults');
+  var nameEl=document.getElementById('qzName');
+  var emailEl=document.getElementById('qzEmail');
+  if(!gate) return;
+  var state={name:'',email:'',answers:{}};
+  var flat=[];
+  QUIZ.forEach(function(chap,ci){chap.qs.forEach(function(q,qi){flat.push({id:'qz'+ci+'_'+qi,ci:ci,chap:chap.ch,q:q});});});
+
+  function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+  function validName(v){return v.trim().split(/\s+/).length>=2 && v.trim().length>=3;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function normalize(s){return String(s).toLowerCase().replace(/[^a-z0-9]/g,'');}
+
+  document.getElementById('qzStart').addEventListener('click',function(){
+    var ok=true, fn=document.getElementById('qzFName'), fe=document.getElementById('qzFEmail');
+    if(!validName(nameEl.value)){fn.classList.add('invalid');ok=false;}else{fn.classList.remove('invalid');}
+    if(!validEmail(emailEl.value)){fe.classList.add('invalid');ok=false;}else{fe.classList.remove('invalid');}
+    if(!ok)return;
+    state.name=nameEl.value.trim();state.email=emailEl.value.trim();
+    build();
+    gate.classList.add('qz-hidden');
+    body.classList.remove('qz-hidden');bar.classList.remove('qz-hidden');submitRow.classList.remove('qz-hidden');
+    document.getElementById('qzWho').textContent=state.name;
+    document.getElementById('qzTotal').textContent=flat.length;
+    document.getElementById('part11').scrollIntoView({behavior:'smooth'});
+  });
+  [nameEl,emailEl].forEach(function(el){el.addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('qzStart').click();});});
+
+  function build(){
+    var html='';var n=0;
+    QUIZ.forEach(function(chap,ci){
+      html+='<div class="qz-chapblock"><div class="qz-chaphead">'+esc(chap.ch)+'</div>';
+      chap.qs.forEach(function(q,qi){
+        n++;var id='qz'+ci+'_'+qi;
+        var tl=q.t==='mc'?'Multiple choice':(q.t==='tf'?'True / False':'Key line');
+        html+='<div class="qz-q" id="'+id+'"><span class="qtype">'+tl+'</span>';
+        html+='<p class="qtext"><span class="n">'+n+'.</span>'+esc(q.q)+'</p>';
+        if(q.t==='mc'){html+='<div class="qz-opts">';q.opts.forEach(function(o,oi){html+='<label class="qz-opt"><input type="radio" name="'+id+'" value="'+oi+'"><span>'+esc(o)+'</span></label>';});html+='</div>';}
+        else if(q.t==='tf'){html+='<div class="qz-opts"><label class="qz-opt"><input type="radio" name="'+id+'" value="true"><span>True</span></label><label class="qz-opt"><input type="radio" name="'+id+'" value="false"><span>False</span></label></div>';}
+        else{html+='<div class="qz-fill"><input type="text" name="'+id+'" placeholder="Type your answer…" autocomplete="off"><div class="hint">A short answer or the key word(s) is enough.</div></div>';}
+        html+='</div>';
+      });
+      html+='</div>';
+    });
+    body.innerHTML=html;
+    body.querySelectorAll('input[type=radio]').forEach(function(inp){inp.addEventListener('change',function(){
+      state.answers[inp.name]=inp.value;
+      body.querySelectorAll('input[name="'+inp.name+'"]').forEach(function(g){g.closest('.qz-opt').classList.toggle('sel',g.checked);});
+      prog();
+    });});
+    body.querySelectorAll('input[type=text]').forEach(function(inp){inp.addEventListener('input',function(){
+      var v=inp.value.trim(); if(v)state.answers[inp.name]=v; else delete state.answers[inp.name]; prog();
+    });});
+    prog();
+  }
+  function prog(){
+    var c=Object.keys(state.answers).filter(function(k){return state.answers[k]!=='' && state.answers[k]!=null;}).length;
+    document.getElementById('qzAnswered').textContent=c;
+  }
+  function grade(item){
+    var q=item.q, ans=state.answers[item.id];
+    if(ans==null||ans===''){return {correct:false,given:'(blank)',want:want(q)};}
+    if(q.t==='mc'){var gi=parseInt(ans,10);return {correct:gi===q.a,given:q.opts[gi],want:q.opts[q.a]};}
+    if(q.t==='tf'){var gb=(ans==='true');return {correct:gb===q.a,given:gb?'True':'False',want:q.a?'True':'False'};}
+    var na=normalize(ans);
+    var ok=(q.accept||[]).some(function(acc){var n2=normalize(acc);return na===n2||(n2.length>2&&na.indexOf(n2)>-1)||(na.length>2&&n2.indexOf(na)>-1);});
+    return {correct:ok,given:ans,want:(q.accept&&q.accept[0])||''};
+  }
+  function want(q){if(q.t==='mc')return q.opts[q.a];if(q.t==='tf')return q.a?'True':'False';return (q.accept&&q.accept[0])||'';}
+
+  document.getElementById('qzClear').addEventListener('click',function(){
+    state.answers={};
+    body.querySelectorAll('input').forEach(function(i){if(i.type==='radio')i.checked=false;else i.value='';});
+    body.querySelectorAll('.qz-opt.sel').forEach(function(o){o.classList.remove('sel');});
+    prog();document.getElementById('part11').scrollIntoView({behavior:'smooth'});
+  });
+  document.getElementById('qzSubmit').addEventListener('click',function(){
+    var answered=Object.keys(state.answers).length;
+    if(answered<flat.length){var m=flat.length-answered;if(!confirm('You have '+m+' unanswered question'+(m>1?'s':'')+'. Blank answers count as incorrect. Submit anyway?'))return;}
+    show();
+  });
+  function show(){
+    var total=flat.length,correct=0,perChap={};
+    QUIZ.forEach(function(c){perChap[c.ch]={c:0,t:0};});
+    var rev='';
+    flat.forEach(function(item,idx){
+      var g=grade(item);perChap[item.chap].t++;
+      if(g.correct){correct++;perChap[item.chap].c++;}
+      rev+='<div class="qz-rq '+(g.correct?'right':'wrong')+'"><div class="rstat">'+(g.correct?'✓ Correct':'✗ Missed')+' · '+esc(item.chap)+'</div>';
+      rev+='<p class="rqt">'+(idx+1)+'. '+esc(item.q.q)+'</p>';
+      rev+='<p class="rline"><span class="k">Your answer</span><span class="yours">'+esc(g.given)+'</span></p>';
+      if(!g.correct)rev+='<p class="rline"><span class="k">Correct</span><span class="correct">'+esc(g.want)+'</span></p>';
+      if(item.q.why)rev+='<div class="why">'+esc(item.q.why)+'</div>';
+      rev+='</div>';
+    });
+    var pct=Math.round(correct/total*100),gl,gc;
+    if(pct>=90){gl='Mastery';gc='#1F7A54';}else if(pct>=75){gl='Solid — Sharpen';gc='#A9791C';}else if(pct>=60){gl='Shaky — Review';gc='#C8442E';}else{gl='Back to the Manual';gc='#C8442E';}
+    var h='<div class="qz-scorecard"><div class="lbl">Your Score</div><div class="big">'+pct+'<span>%</span></div>';
+    h+='<div class="grade" style="background:'+gc+'">'+gl+'</div>';
+    h+='<div class="who2"><b>'+esc(state.name)+'</b> · '+esc(state.email)+' · '+correct+'/'+total+' correct</div></div>';
+    h+='<div class="qz-breakdown"><h3>Chapter breakdown</h3><p class="bsub">Where you\'re strong and where to go back.</p>';
+    QUIZ.forEach(function(c){var p=perChap[c.ch],cp=p.t?Math.round(p.c/p.t*100):0,cls=cp>=80?'':(cp>=50?'mid':'low');
+      h+='<div class="qz-brow"><div class="bname">'+esc(c.ch)+'</div><div class="qz-btrack"><div class="qz-bfill '+cls+'" style="width:'+cp+'%"></div></div><div class="bscore">'+p.c+'/'+p.t+'</div></div>';});
+    h+='</div><div class="qz-review"><h3>Review every question</h3>'+rev+'</div>';
+    h+='<div class="qz-submitrow" style="margin-top:32px"><button class="qz-btn ghost" id="qzRetake">↻ Retake the test</button></div>';
+    results.innerHTML=h;
+    body.classList.add('qz-hidden');submitRow.classList.add('qz-hidden');bar.classList.add('qz-hidden');
+    results.classList.remove('qz-hidden');
+    document.getElementById('part11').scrollIntoView({behavior:'smooth'});
+    document.getElementById('qzRetake').addEventListener('click',function(){
+      state.answers={};results.classList.add('qz-hidden');results.innerHTML='';
+      build();body.classList.remove('qz-hidden');bar.classList.remove('qz-hidden');submitRow.classList.remove('qz-hidden');
+      document.getElementById('part11').scrollIntoView({behavior:'smooth'});
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
